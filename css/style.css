@@ -1,5 +1,20 @@
 body, html{
     width:600px;
-    align-content: center;
-    background-color: black;
+    margin: auto;
+    background-color: red;
+}
+header {
+    background-color: green;
+    padding: 10px;
+    overflow: hidden;
+}
+footer {
+    background-color: blue;
+    border-top: 1px;
+    border-top-style: solid;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width:600px;
+    text-align: center;
 }
