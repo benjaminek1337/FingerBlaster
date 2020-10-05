@@ -2,12 +2,15 @@ body, html{
     width:600px;
     margin: auto;
     background-color: red;
+    font-family: Arial, Helvetica, sans-serif;
 }
+
 header {
     background-color: green;
     padding: 10px;
     overflow: hidden;
 }
+
 footer {
     background-color: blue;
     border-top: 1px;
@@ -17,4 +20,8 @@ footer {
     bottom: 0;
     width:600px;
     text-align: center;
+}
+
+h1{
+    text-align:center;
 }
