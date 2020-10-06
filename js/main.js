@@ -23,26 +23,51 @@ window.onload = function (){
     }
 
     function startGame(){
+        charCounter = 0;
+        errorsCounter = 0;
         textinput.disabled = false;
         textinput.focus();
+        resetLetters();
         markActiveChar();
+        startTime = null;
+        startGameBtn.disabled = true;
+        endGameBtn.disabled = false;
+        wpmText.innerHTML ="Total WPM: --";
+        netWPMText.innerHTML ="Justerad WPM: --";
+        errorsText.innerHTML = "Antal fel: 0";
+        errorsPercentageText.innerHTML = "Träffsäkerhet: 100%";
+    }
+
+    function stopGame(){
+        endGame();
+        resetLetters();
+        charCounter = 0;
+        errorsCounter = 0;
+        wpmText.innerHTML ="";
+        netWPMText.innerHTML ="";
+        errorsText.innerHTML = "";
+        errorsPercentageText.innerHTML = "";
     }
 
     function endGame(){
         textinput.disabled = true;
         textinput.value = "";
+        startGameBtn.disabled = false;
+        endGameBtn.disabled = true;
+        startTime = null;
+    }
+
+    function resetLetters(){
         for (let i = 0; i < chars.length; i++) {
             const char = chars[i];
             char.className = ""
         }
-        counter = 0;
-        errros = 0;
     }
 
     function markActiveChar(){
-        char = chars.find(c => c.id == counter);
+        char = chars.find(c => c.id == charCounter);
         if(char.id != 0){
-            let previousChar = chars.find(c => c.id == char.id - 1);
+            const previousChar = chars.find(c => c.id == char.id - 1);
             previousChar.classList.remove("active-char");
         }
         char.classList.add("active-char");
@@ -53,64 +78,75 @@ window.onload = function (){
             char.classList.add("correct-char");
         } else {
             char.classList.add("incorrect-char");
-            errors++;
+            errorsCounter++;
             setNrOfErrorsText();
         }
     }
 
     function getWPM(){
+        let currentTime = Date.now();
         let elapsedTime = (currentTime - startTime) / 60000;
-        let grossWPM = (counter / 5) / elapsedTime;
-        let netWPM = grossWPM - ( errors / 60000);
-        let wpmText = document.getElementById("wpm-text");
-        let netWPMText = document.getElementById("net-wpm-text");
-        wpmText.innerHTML ="Total WPM: " + Math.ceil(grossWPM);
-        netWPMText.innerHTML ="Justerad WPM: " + Math.ceil(netWPM);
+        let grossWPM = (charCounter / 5) / elapsedTime;
+        let netWPM = grossWPM - (( errorsCounter / 5) / elapsedTime);
+        setWPMtext(grossWPM, netWPM);
+    }
+
+    function setWPMtext(grossWPM, netWPM){
+        wpmText.innerHTML ="Total WPM: " + Math.round(grossWPM);
+        netWPMText.innerHTML ="Justerad WPM: " + Math.round(netWPM);
     }
 
     function setNrOfErrorsText(){
-        let errorsText = document.getElementById("errors-text");
-        errorsText.innerHTML = "Antal fel: " + errors;
+        errorsText.innerHTML = "Antal fel: " + errorsCounter;
     }
 
-    var textarea = document.getElementById("game-textarea");
-    var textinput = document.getElementById("textinput");
-    var startGameBtn = document.getElementById("start-game-btn");
-    var endGameBtn = document.getElementById("end-game-btn");
+    function setErrorsPercentageText(){
+        let percent = (errorsCounter * 100) / charCounter;
+        errorsPercentageText.innerHTML = "Träffsäkerhet: " + Math.round(100 - percent) + "%" 
+    }
+
+    const textarea = document.getElementById("game-textarea");
+    const textinput = document.getElementById("textinput");
+    const startGameBtn = document.getElementById("start-game-btn");
+    const endGameBtn = document.getElementById("end-game-btn");
+    const wpmText = document.getElementById("wpm-text");
+    const netWPMText = document.getElementById("net-wpm-text");
+    const errorsText = document.getElementById("errors-text");
+    const errorsPercentageText = document.getElementById("errors-percentage-text");
     let chars;
-    var char;
-    var counter = 0;
-    var errors = 0;
-    var startTime;
-    var currentTime;
-    var inputString = "Dä Börja likna nått nu, för nu kommer det en hel " + 
-    "jävla blaffa text här som man ska matcha";
+    let char;
+    let charCounter;
+    let errorsCounter;
+    let startTime;
+    let inputString = "Detta ska ju ersättas med massa text från en XMLfil";
 
     startGameBtn.addEventListener("click", function(){
         startGame();
-        startGameBtn.disabled = true;
-        endGameBtn.disabled = false;
+        console.log(chars.length);
     })
     endGameBtn.addEventListener("click", function(){
-        endGame();
-        startGameBtn.disabled = false;
-        endGameBtn.disabled = true;
+        stopGame();
     });
     textinput.addEventListener("keydown", function(event){
-        var key = event.key;
+        let key = event.key;
         if(startTime == null){
             startTime = Date.now();
-            console.log(startTime);
         }
-        if(key == " "){
-            textinput.value="";
-        }
-        if(key != "Shift"){
-            currentTime = Date.now();
+        if(/^[a-öA-Ö,.; ]$/.test(key)){
+            if(key == " "){
+                textinput.value="";
+            }
             markCorrectChar(key);
-            counter++;
-            markActiveChar();
+            charCounter++;
             getWPM();
+            setErrorsPercentageText()
+            if(chars.length > charCounter){
+                markActiveChar();
+            }
+            else{
+                char.classList.remove("active-char");
+                endGame();
+            }
         }
     })
 
