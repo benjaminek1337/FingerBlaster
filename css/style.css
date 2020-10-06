@@ -1,5 +1,5 @@
 body, html{
-    width:600px;
+    max-width:600px;
     margin: auto;
     background-color: red;
     font-family: Arial, Helvetica, sans-serif;
@@ -25,3 +25,43 @@ footer {
 h1{
     text-align:center;
 }
+
+.game-area {
+    text-align:center;
+    background-color: white;
+    padding:20px;
+}
+
+#game-textarea {
+    resize:none;
+    color:black;
+    background-color: thistle;
+    height:200px;
+    text-align: left;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+#textinput{
+    height:30px;
+    width: 140px;
+    font-size: larger;
+    text-align:center;
+}
+
+.active-char{
+    background-color: yellow;
+}
+
+.correct-char{
+    color:green;
+}
+
+.incorrect-char{
+    color:red;
+}
+
+#textinput:focus::-webkit-input-placeholder { color:transparent; }
+#textinput:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+#textinput:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+#textinput:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
