@@ -25,6 +25,10 @@ header {
     padding-top:20px;
 }
 
+h1{
+    text-align:center;
+}
+
 .logo-main-text {
 font-family: 'Candal', sans-serif;
 font-size: 85px;
@@ -60,19 +64,29 @@ main{
 }
 
 footer {
-    background-color: rgba(245, 245, 245, 0.432);
+    background-color: rgba(37, 37, 37, 0.521);
     border-top: 1px;
     border-top-color: hotpink;
     border-top-style: solid;
-    padding-bottom:20px;
+    padding-top:10px;
+    padding-bottom:10px;
     position: fixed;
     bottom: 0;
     width:600px;
     text-align: center;
 }
 
-h1{
-    text-align:center;
+footer span{
+    font-size: 1.1em;
+    float:left;
+    margin-left:20px;
+    color:white;
+}
+footer a{
+    font-size:1.1em;
+    color: white;
+    float:right;
+    margin-right:20px;
 }
 
 #selected-text-title{
@@ -100,13 +114,10 @@ h1{
     resize:none;
     color:black;
     height:200px;
-    
     text-align: left;
     padding:10px;
     margin-bottom:10px;
-    
     font-size: 1.24em;
-
 }
 
 #textinput{
@@ -116,7 +127,14 @@ h1{
     text-align:center;
     border-style: none;
     border-radius: 10px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
 
+#game-btn{
+    margin-left:20px;
+    position: absolute;
+    top:508px;
 }
 
 #textinput:disabled{
@@ -156,4 +174,12 @@ h1{
 .play-game-btn.stop{
     background: url("../img/pausegamebtn.png");
     background-size: cover;
+}
+
+.stats-text-area{
+    padding-top:10px;
+    width:40%;
+    Text-align:right;
+
+    height:90px;
 }
