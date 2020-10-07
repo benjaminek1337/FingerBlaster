@@ -9,26 +9,24 @@ beek1800@student.miun.se
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flinka fingrar</title>
+    <title>Finger Blaster - Type 'Til U Bleed</title>
     <link rel="stylesheet" href="./css/style.css">
     <script src="./js/main.js"></script>
 </head>
 <body>
     <header>
-        <h1>Flinka fingrar</h1>
+        <h1 class="logo-main-text">FINGER</h1>
+        <h3 class="logo-side-text">blaster</h3>
     </header>
-    <article>
-        <h1>SKRIVA SNABBT KRAPPAR</h1>
-        <p>Sena krappar, de ä Leifi. Nu - ja vill ni ska skrifa snappt som satan. Annars ja komma
-            in å prassa i säften på er me knogjärne va
-        </p>
+    <main>
         <div class="game-area">
-            <h1>Fina texten att härma</h1>
-            <p>Här sätta bokstäveri å såna krejjer</p>
+            <h2 id="selected-text-title">Vald text</h2>
+            <p id="selected-text-info">Författare, ord samt tecken</p>
             <div id="game-textarea"></div>
             <input type="text" id="textinput" disabled="true" placeholder="Skriv här...">
-            <button id="start-game-btn">STARTA SIG</button>
-            <button id="end-game-btn">SLUTA NU</button>
+            <button id="game-btn" class="play-game-btn">
+                <!-- <img src="./img/playgamebtn.png" alt="play"> -->
+            </button>
             <br>
             <span id="wpm-text" class="stat-text"></span>
             <br>
@@ -38,7 +36,7 @@ beek1800@student.miun.se
             <br>
             <span id="errors-percentage-text" class="stat-text"></span>
         </div>
-    </article>
+    </main>
     <footer>
         <p>&copy; Kelsos Bärs & Tungmek, all rights reserved </p>
         <a href="mailto:beek1800@student.miun.se">Kontakta mig (inte)</a> 

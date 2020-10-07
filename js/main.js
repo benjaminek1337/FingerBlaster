@@ -3,7 +3,6 @@ window.onload = function (){
     function onInit(){
         fillTextArea(); //Relik från tidigare. Ersätt mot aktiv text i listan
         fillTextArray();
-        endGameBtn.disabled = true;
     }
 
     function fillTextArea(){
@@ -23,44 +22,45 @@ window.onload = function (){
     }
 
     function startGame(){
-        charCounter = 0;
-        errorsCounter = 0;
-        textinput.disabled = false;
-        textinput.focus();
+        resetCounters()
         resetLetters();
         markActiveChar();
         startTime = null;
-        startGameBtn.disabled = true;
-        endGameBtn.disabled = false;
+        textinput.disabled = false;
+        textinput.focus();
+
         wpmText.innerHTML ="Total WPM: --";
         netWPMText.innerHTML ="Justerad WPM: --";
         errorsText.innerHTML = "Antal fel: 0";
         errorsPercentageText.innerHTML = "Träffsäkerhet: 100%";
     }
+    
+    function endGame(){
+        textinput.blur();
+        textinput.disabled = true;
+        textinput.value = "";
+        startTime = null;
+    }
 
     function stopGame(){
-        endGame();
-        resetLetters();
-        charCounter = 0;
-        errorsCounter = 0;
         wpmText.innerHTML ="";
         netWPMText.innerHTML ="";
         errorsText.innerHTML = "";
         errorsPercentageText.innerHTML = "";
+        endGame();
+        resetCounters()
+        resetLetters();
     }
 
-    function endGame(){
-        textinput.disabled = true;
-        textinput.value = "";
-        startGameBtn.disabled = false;
-        endGameBtn.disabled = true;
-        startTime = null;
+    function resetCounters(){
+        charCounter = 0;
+        errorsCounter = 0;
     }
 
     function resetLetters(){
         for (let i = 0; i < chars.length; i++) {
             const char = chars[i];
-            char.className = ""
+            char.className = "";
         }
     }
 
@@ -80,6 +80,7 @@ window.onload = function (){
             char.classList.add("incorrect-char");
             errorsCounter++;
             setNrOfErrorsText();
+            //FEL JÄVLA LOSER-ljud
         }
     }
 
@@ -107,8 +108,7 @@ window.onload = function (){
 
     const textarea = document.getElementById("game-textarea");
     const textinput = document.getElementById("textinput");
-    const startGameBtn = document.getElementById("start-game-btn");
-    const endGameBtn = document.getElementById("end-game-btn");
+    const gameBtn = document.getElementById("game-btn");
     const wpmText = document.getElementById("wpm-text");
     const netWPMText = document.getElementById("net-wpm-text");
     const errorsText = document.getElementById("errors-text");
@@ -120,13 +120,16 @@ window.onload = function (){
     let startTime;
     let inputString = "Detta ska ju ersättas med massa text från en XMLfil";
 
-    startGameBtn.addEventListener("click", function(){
-        startGame();
-        console.log(chars.length);
+    gameBtn.addEventListener("click", function(){
+        if(!gameBtn.classList.contains("stop")){
+            startGame();
+            gameBtn.classList.add("stop");
+        } else {
+            stopGame();
+            gameBtn.classList.remove("stop");
+        }
     })
-    endGameBtn.addEventListener("click", function(){
-        stopGame();
-    });
+
     textinput.addEventListener("keydown", function(event){
         let key = event.key;
         if(startTime == null){
@@ -144,7 +147,9 @@ window.onload = function (){
                 markActiveChar();
             }
             else{
+                //pling DU ÄR KLAR ljud
                 char.classList.remove("active-char");
+                gameBtn.classList.remove("stop");
                 endGame();
             }
         }
