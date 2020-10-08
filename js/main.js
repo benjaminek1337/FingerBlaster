@@ -1,20 +1,61 @@
 window.onload = function (){
     
     function onInit(){
+        loadJSON(function(response) {
+            texts = JSON.parse(response);
+        });
+        fillTextSelector();
         fillTextArea(); //Relik från tidigare. Ersätt mot aktiv text i listan
         fillTextArray();
+        setInfoText();
+    }
+
+    function loadJSON(callback){
+        const obj = new XMLHttpRequest();
+        obj.overrideMimeType("application/json");
+        obj.open('GET', 'texts.json', false);
+        obj.onreadystatechange = function () {
+            if (obj.readyState == 4 && obj.status == "200") {
+                callback(obj.responseText);
+            }
+        };
+        obj.send(null);  
+    }
+
+    function fillTextSelector(){
+        let option;
+        for (let i = 0; i < texts.length; i++) {
+            const text = texts[i];
+            option = document.createElement("option");
+            option.text = text.title;
+            selector.appendChild(option);
+        }
     }
 
     function fillTextArea(){
-       let span, node;
-        for (let i = 0; i < inputString.split("").length; i++) {
-            const character = inputString[i];
+       let span, node, text;
+       text = texts.find(t => t.title == selector.value)
+       console.log(text);
+        for (let i = 0; i < text.text.split("").length; i++) {
+            const character = text.text[i];
             span = document.createElement("span");
             node = document.createTextNode(character);
             span.id = i;
             span.appendChild(node);
             textarea.appendChild(span);
         }
+    }
+
+    function setInfoText(){
+        const text = texts.find(t => t.title == selector.value);
+        selectedTextTitle.innerHTML = text.title;
+        let wordCount = text.text.split(" ").length;
+        selectedTextInfo.innerHTML = text.author + " (" + wordCount + " ord, " + 
+        chars.length + " tecken)"
+    }
+
+    function clearText(){
+        textarea.innerHTML="";
     }
 
     function fillTextArray(){
@@ -106,6 +147,7 @@ window.onload = function (){
         errorsPercentageText.innerHTML = "Träffsäkerhet: " + Math.round(100 - percent) + "%" 
     }
 
+    const selector = document.getElementById("text-selector");
     const textarea = document.getElementById("game-textarea");
     const textinput = document.getElementById("textinput");
     const gameBtn = document.getElementById("game-btn");
@@ -113,12 +155,15 @@ window.onload = function (){
     const netWPMText = document.getElementById("net-wpm-text");
     const errorsText = document.getElementById("errors-text");
     const errorsPercentageText = document.getElementById("errors-percentage-text");
+    const selectedTextTitle = document.getElementById("selected-text-title");
+    const selectedTextInfo = document.getElementById("selected-text-info");
+    
+    let texts;
     let chars;
     let char;
     let charCounter;
     let errorsCounter;
     let startTime;
-    let inputString = "Detta ska ju ersättas med massa text från en XMLfil";
 
     gameBtn.addEventListener("click", function(){
         if(!gameBtn.classList.contains("stop")){
@@ -128,14 +173,21 @@ window.onload = function (){
             stopGame();
             gameBtn.classList.remove("stop");
         }
-    })
+    });
+
+    selector.addEventListener("change", function(){
+        clearText();
+        fillTextArea();
+        fillTextArray();
+        setInfoText();
+    });
 
     textinput.addEventListener("keydown", function(event){
         let key = event.key;
         if(startTime == null){
             startTime = Date.now();
         }
-        if(/^[a-öA-Ö,.; ]$/.test(key)){
+        if(/^[a-öA-Ö,.;'!\- ]$/.test(key)){
             if(key == " "){
                 textinput.value="";
             }

@@ -2,7 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Mr+Dafoe);
 
 html{
-    background:url(../img/background-laser2.jpg) no-repeat;
+    background:url(../img/background-laser3.jpg) no-repeat;
     background-size: cover;
     background-position: center; 
     min-height:200px;  
@@ -30,28 +30,29 @@ h1{
 }
 
 .logo-main-text {
-font-family: 'Candal', sans-serif;
-font-size: 85px;
-font-style: italic;
--webkit-text-stroke: 0.1px #fa87f4;
-color: #fff;
-text-shadow: -10px 10px 0px  #fa87f4;
-margin: 0;
-margin-right:25%;
+    font-family: 'Candal', sans-serif;
+    font-size: 85px;
+    font-style: italic;
+    -webkit-text-stroke: 0.1px #fa87f4;
+    color: #fff;
+    text-shadow: -10px 10px 0px  #fa87f4;
+    margin: 0;
+    margin-right:25%;
+
 }
 
 .logo-side-text {
-position: absolute;
-left: 49%;
-top: 4%;
-font-family: 'Mr Dafoe', cursive;
-font-size: 90px;
-transform:rotate(-15deg);
--ms-transform:rotate(-15deg); /* IE 9 */
--webkit-transform:rotate(-15deg); /* Safari and Chrome */
-color: #ff00f293;
-margin: 0;
-text-shadow: 1px 2px 0px #F9D2D2;
+    position: absolute;
+    left: 49%;
+    top: 4%;
+    font-family: 'Mr Dafoe', cursive;
+    font-size: 90px;
+    transform:rotate(-15deg);
+    -ms-transform:rotate(-15deg); /* IE 9 */
+    -webkit-transform:rotate(-15deg); /* Safari and Chrome */
+    color: #ff00f293;
+    margin: 0;
+    text-shadow: 1px 2px 0px #F9D2D2;
 }
   
 
@@ -64,9 +65,9 @@ main{
 }
 
 footer {
-    background-color: rgba(37, 37, 37, 0.521);
-    border-top: 1px;
-    border-top-color: hotpink;
+    background-color: rgba(37, 37, 37, 0.726);
+    border-top: 2px;
+    border-top-color:  #ff00f293;
     border-top-style: solid;
     padding-top:10px;
     padding-bottom:10px;
@@ -104,8 +105,7 @@ footer a{
 .game-area {
     text-align:center;
     padding:20px;
-    background-color: rgba(250, 250, 250, 0.24);
-    background-color: rgba(250, 250, 250, 0.89);
+    background-color: rgba(250, 250, 250, 0.733);
     box-shadow: 0px 0px 40px 10px rgba(207, 207, 207, 0.89);
     border-radius: 10px;
 }
@@ -120,31 +120,6 @@ footer a{
     font-size: 1.24em;
 }
 
-#textinput{
-    height:30px;
-    width: 140px;
-    font-size: larger;
-    text-align:center;
-    border-style: none;
-    border-radius: 10px;
-    margin-top:10px;
-    margin-bottom:10px;
-}
-
-#game-btn{
-    margin-left:20px;
-    position: absolute;
-    top:508px;
-}
-
-#textinput:disabled{
-    background-color: rgb(200, 200, 200);
-}
-
-#textinput span{
-    font-size: 10em;
-}
-
 .active-char{
     background-color: rgba(255, 7, 193, 0.52);
 }
@@ -157,12 +132,39 @@ footer a{
     color:red;
 }
 
+#textinput{
+    height:30px;
+    width: 140px;
+    font-size: larger;
+    text-align:center;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #ff00f2;
+    border-radius: 10px;
+    margin-top:8px;
+    margin-bottom:10px;
+    box-shadow: 0px 0px 15px 1px rgba(255, 0, 221, 0.37);
+}
+
+#textinput:disabled{
+    background-color: rgb(200, 200, 200);
+    border-color:#b83dba;
+    box-shadow: none;
+}
+
+#textinput span{
+    font-size: 10em;
+}
+
 #textinput:focus::-webkit-input-placeholder { color:transparent; }
 #textinput:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
 #textinput:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
 #textinput:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 
 .play-game-btn{
+    margin-left:20px;
+    position: absolute;
+    top:508px;
     background: url("../img/playgamebtn.png") no-repeat;
     background-size: cover;
     cursor: pointer;
