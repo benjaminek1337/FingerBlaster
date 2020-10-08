@@ -23,19 +23,33 @@ window.onload = function (){
     }
 
     function fillTextSelector(){
-        let option;
-        for (let i = 0; i < texts.length; i++) {
-            const text = texts[i];
+        let option, filteredTexts;
+        switch (true) {
+            case radioBtns[0].checked:
+                filteredTexts = texts.filter(t => t.language == "swedish");
+                break;
+            case radioBtns[1].checked:
+                filteredTexts = texts.filter(t => t.language == "english");
+                break;
+        }
+        for (let i = 0; i < filteredTexts.length; i++) {
+            const text = filteredTexts[i];
             option = document.createElement("option");
             option.text = text.title;
             selector.appendChild(option);
         }
     }
 
+    function clearTextSelector(){
+        for (let i = selector.options.length - 1; i >= 0; i--){
+            selector.options[i] = null;
+        }
+    }
+
     function fillTextArea(){
        let span, node, text;
        text = texts.find(t => t.title == selector.value)
-       console.log(text);
+
         for (let i = 0; i < text.text.split("").length; i++) {
             const character = text.text[i];
             span = document.createElement("span");
@@ -69,11 +83,11 @@ window.onload = function (){
         startTime = null;
         textinput.disabled = false;
         textinput.focus();
-
-        wpmText.innerHTML ="Total WPM: --";
-        netWPMText.innerHTML ="Justerad WPM: --";
-        errorsText.innerHTML = "Antal fel: 0";
-        errorsPercentageText.innerHTML = "Träffsäkerhet: 100%";
+        wpmText.innerHTML ="--";
+        netWPMText.innerHTML ="--";
+        errorsText.innerHTML = "0";
+        errorsPercentageText.innerHTML = "100%";
+        gameBtn.classList.add("stop");
     }
     
     function endGame(){
@@ -91,6 +105,7 @@ window.onload = function (){
         endGame();
         resetCounters()
         resetLetters();
+        gameBtn.classList.remove("stop");
     }
 
     function resetCounters(){
@@ -115,9 +130,13 @@ window.onload = function (){
     }
 
     function markCorrectChar(key){
-        if(char.innerHTML == key){
+        if(checkbox.checked && char.innerHTML.toLowerCase() == key.toLowerCase()){
             char.classList.add("correct-char");
-        } else {
+        }
+        else if(char.innerHTML == key){
+            char.classList.add("correct-char");
+        }
+        else {
             char.classList.add("incorrect-char");
             errorsCounter++;
             setNrOfErrorsText();
@@ -134,27 +153,29 @@ window.onload = function (){
     }
 
     function setWPMtext(grossWPM, netWPM){
-        wpmText.innerHTML ="Total WPM: " + Math.round(grossWPM);
-        netWPMText.innerHTML ="Justerad WPM: " + Math.round(netWPM);
+        wpmText.innerHTML =Math.round(grossWPM);
+        netWPMText.innerHTML =Math.round(netWPM);
     }
 
     function setNrOfErrorsText(){
-        errorsText.innerHTML = "Antal fel: " + errorsCounter;
+        errorsText.innerHTML =errorsCounter;
     }
 
     function setErrorsPercentageText(){
         let percent = (errorsCounter * 100) / charCounter;
-        errorsPercentageText.innerHTML = "Träffsäkerhet: " + Math.round(100 - percent) + "%" 
+        errorsPercentageText.innerHTML = Math.round(100 - percent) + "%" 
     }
-
+    
     const selector = document.getElementById("text-selector");
+    const radioBtns = Array.from(document.querySelectorAll(".radio-lng"));
+    const checkbox = document.getElementById("case-toggle");
     const textarea = document.getElementById("game-textarea");
     const textinput = document.getElementById("textinput");
     const gameBtn = document.getElementById("game-btn");
-    const wpmText = document.getElementById("wpm-text");
-    const netWPMText = document.getElementById("net-wpm-text");
-    const errorsText = document.getElementById("errors-text");
-    const errorsPercentageText = document.getElementById("errors-percentage-text");
+    const wpmText = document.getElementById("wpm-value");
+    const netWPMText = document.getElementById("net-wpm-value");
+    const errorsText = document.getElementById("errors-value");
+    const errorsPercentageText = document.getElementById("errors-percentage-value");
     const selectedTextTitle = document.getElementById("selected-text-title");
     const selectedTextInfo = document.getElementById("selected-text-info");
     
@@ -168,19 +189,35 @@ window.onload = function (){
     gameBtn.addEventListener("click", function(){
         if(!gameBtn.classList.contains("stop")){
             startGame();
-            gameBtn.classList.add("stop");
         } else {
             stopGame();
-            gameBtn.classList.remove("stop");
         }
     });
 
     selector.addEventListener("change", function(){
+        stopGame();
         clearText();
         fillTextArea();
         fillTextArray();
         setInfoText();
     });
+
+    for (let i = 0; i < radioBtns.length; i++) {
+        const rb = radioBtns[i];
+        rb.addEventListener("click", function(){
+            stopGame();
+            clearTextSelector();
+            fillTextSelector();
+            clearText();
+            fillTextArea();
+            fillTextArray();
+            setInfoText();
+        })
+    }
+
+    checkbox.addEventListener("click", function(){
+        stopGame();
+    })
 
     textinput.addEventListener("keydown", function(event){
         let key = event.key;
@@ -199,7 +236,6 @@ window.onload = function (){
                 markActiveChar();
             }
             else{
-                //pling DU ÄR KLAR ljud
                 char.classList.remove("active-char");
                 gameBtn.classList.remove("stop");
                 endGame();

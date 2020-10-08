@@ -15,31 +15,60 @@ beek1800@student.miun.se
 </head>
 <body>
     <header>
-        <h1 class="logo-main-text">FINGER</h1>
-        <h3 class="logo-side-text">blaster</h3>
+        <h1 class="logo-main-text noselect">FINGER</h1>
+        <h3 class="logo-side-text noselect">blaster</h3>
     </header>
     <main>
-        <div class="options-area">
-            <select id="text-selector"></select>
+        <div class="options-area noselect">
+            <div class="options-box">
+                <span id="text-selector-label">Välj text:</span>
+                <select id="text-selector"></select>
+            </div>
+            <div class="options-box">
+                <div class="radio-buttons-area">
+                    <div class="radio-area">
+                        <input checked type="radio" name="language" id="radio-swedish" class="radio-lng">
+                        <label for="radio-swedish">Svenska</label>
+                        <input type="radio" name="language" id="radio-english" class="radio-lng">
+                        <label for="radio-english">Engelska</label>
+                    </div>
+                    <div class="checkbox-area">
+                        <input type="checkbox" name="case-toggle" id="case-toggle">
+                        <label for="case-toggle">Ignorera gemener/versaler</label>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="game-area">
             <h2 id="selected-text-title">Vald text</h2>
             <p id="selected-text-info">Författare, ord samt tecken</p>
             <div id="game-textarea"></div>
-            <input type="text" id="textinput" disabled="true" placeholder="Skriv här...">
-            <button id="game-btn" class="play-game-btn">
-                <!-- <img src="./img/playgamebtn.png" alt="play"> -->
+            <div class="input-startbtn-area">
+                <input type="text" id="textinput" disabled="true" placeholder="Skriv här...">
+                <button id="game-btn" class="play-game-btn">
+            </div>
             </button>
             <br>
-            <div class="stats-text-area">
-                <!--Gör om det här sen. fult.-->
-                <span id="wpm-text" class="stat-text"></span>
-                <br>
-                <span id="net-wpm-text" class="stat-text"></span>
-                <br>
-                <span id="errors-text" class="stat-text"></span>
-                <br>
-                <span id="errors-percentage-text" class="stat-text"></span>
+            <div class="stats-area">
+                <div class="stats-text-area">
+                    <!--Gör om det här sen. fult.-->
+                    <span id="wpm-text" class="stat-text">Ord i minuten:</span>
+                    <br>
+                    <span id="net-wpm-text" class="stat-text">Ord i minuten, minus fel:</span>
+                    <br>
+                    <span id="errors-text" class="stat-text">Antal fel:</span>
+                    <br>
+                    <span id="errors-percentage-text" class="stat-text">Träffsäkerhet:</span>
+                </div>
+                <div class="stats-value-area">
+                    <span id="wpm-value" class="stat-value"></span>
+                    <br>
+                    <span id="net-wpm-value" class="stat-value"></span>
+                    <br>
+                    <span id="errors-value" class="stat-value"></span>
+                    <br>
+                    <span id="errors-percentage-value" class="stat-value"></span>
+                </div>
             </div>
         </div>
     </main>
