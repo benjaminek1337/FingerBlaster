@@ -115,6 +115,7 @@ footer a{
 }
 
 #text-selector{
+    outline: none;
     height:30px;
     width:200px;
     background-color: rgba(250, 250, 250, 0.733);
@@ -190,7 +191,7 @@ footer a{
 }
 
 #textinput{
-
+    outline: none;
     height:30px;
     width: 140px;
     font-size: larger;
@@ -220,6 +221,7 @@ footer a{
 #textinput:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 
 .play-game-btn{
+    outline: none;
     margin-top:8px;
     margin-left:20px;
     background: url("../img/playgamebtn.png") no-repeat;

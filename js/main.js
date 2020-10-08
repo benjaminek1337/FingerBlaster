@@ -181,7 +181,7 @@ window.onload = function (){
     const selectedTextTitle = document.getElementById("selected-text-title");
     const selectedTextInfo = document.getElementById("selected-text-info");
     const muteBtn = document.getElementById("mute");
-    const buzzAudio = new Audio("../audio/buzzer-sound.mp3");
+    const buzzAudio = document.getElementById("buzzAudio");
 
     let texts;
     let chars;
