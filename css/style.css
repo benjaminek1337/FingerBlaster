@@ -183,7 +183,7 @@ footer a{
 
 .input-startbtn-area{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
     grid-gap: 10px;
     width:40%;
     margin: 0 auto;
@@ -235,11 +235,26 @@ footer a{
     background-size: cover;
 }
 
+#mute{
+    display:none;
+}
+
+#mute + label {
+    padding:0;
+    background:url(../img/mute.png);
+    height:30px;
+    width:30px;
+    cursor: pointer;
+}
+
+#mute:checked + label {
+    background:url(../img/unmute.png);
+}
+
 .stats-area{
     display: grid;
-    grid-template-columns: 5fr 1fr;
+    grid-template-columns: 5fr 1fr 7fr 1fr;
     grid-gap: 0px;
-    width:40%;
     padding:15px;
     background-color: rgba(37, 37, 37, 0.726);
     color:white;

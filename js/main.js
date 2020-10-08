@@ -140,7 +140,9 @@ window.onload = function (){
             char.classList.add("incorrect-char");
             errorsCounter++;
             setNrOfErrorsText();
-            //FEL JÄVLA LOSER-ljud
+            if(!muteBtn.checked){
+                buzzAudio.play();
+            }
         }
     }
 
@@ -178,7 +180,9 @@ window.onload = function (){
     const errorsPercentageText = document.getElementById("errors-percentage-value");
     const selectedTextTitle = document.getElementById("selected-text-title");
     const selectedTextInfo = document.getElementById("selected-text-info");
-    
+    const muteBtn = document.getElementById("mute");
+    const buzzAudio = new Audio("../audio/buzzer-sound.mp3");
+
     let texts;
     let chars;
     let char;
@@ -224,7 +228,7 @@ window.onload = function (){
         if(startTime == null){
             startTime = Date.now();
         }
-        if(/^[a-öA-Ö,.;'!\- ]$/.test(key)){
+        if(/^[a-öA-Ö,.:;'!\- ]$/.test(key)){
             if(key == " "){
                 textinput.value="";
             }
