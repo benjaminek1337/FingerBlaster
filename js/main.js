@@ -88,6 +88,8 @@ window.onload = function (){
         errorsText.innerHTML = "0";
         errorsPercentageText.innerHTML = "100%";
         gameBtn.classList.add("stop");
+        ctx.canvas.width = ctx.canvas.width;
+        ctx.moveTo(0,0);
     }
     
     function endGame(){
@@ -106,6 +108,7 @@ window.onload = function (){
         resetCounters()
         resetLetters();
         gameBtn.classList.remove("stop");
+        ctx.canvas.width = ctx.canvas.width;
     }
 
     function resetCounters(){
@@ -149,23 +152,46 @@ window.onload = function (){
     function getWPM(){
         let currentTime = Date.now();
         let elapsedTime = (currentTime - startTime) / 60000;
-        let grossWPM = (charCounter / 5) / elapsedTime;
-        let netWPM = grossWPM - (( errorsCounter / 5) / elapsedTime);
-        setWPMtext(grossWPM, netWPM);
+        let grossWPM = Math.round((charCounter / 5) / elapsedTime);
+        let prevVPM;
+        if(netWPM != undefined){
+            prevVPM = netWPM;
+        }
+        netWPM = Math.round(grossWPM - (( errorsCounter / 5) / elapsedTime));
+        setWPMtext(grossWPM);
+        drawCanvas(prevVPM);
     }
 
-    function setWPMtext(grossWPM, netWPM){
-        wpmText.innerHTML =Math.round(grossWPM);
-        netWPMText.innerHTML =Math.round(netWPM);
+    function setWPMtext(grossWPM){
+        wpmText.innerHTML = grossWPM;
+        netWPMText.innerHTML = netWPM;
     }
 
     function setNrOfErrorsText(){
-        errorsText.innerHTML =errorsCounter;
+        errorsText.innerHTML = errorsCounter;
     }
 
     function setErrorsPercentageText(){
         let percent = (errorsCounter * 100) / charCounter;
         errorsPercentageText.innerHTML = Math.round(100 - percent) + "%" 
+    }
+
+    function drawCanvas(prevWPM){
+        ctx.strokeStyle = "#ffffff";
+        if(charCounter > 160){
+            let imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
+            ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
+            ctx.putImageData(imageData, 0, 0);
+            ctx.beginPath();
+            ctx.lineWidth = 2;
+            ctx.moveTo(159, (ctx.canvas.height - prevWPM));
+            ctx.lineTo(160, (ctx.canvas.height - netWPM));
+            ctx.stroke();
+        }
+        else{
+            ctx.lineTo(charCounter, (ctx.canvas.height - netWPM));
+            ctx.stroke();
+        }
     }
     
     const selector = document.getElementById("text-selector");
@@ -180,6 +206,11 @@ window.onload = function (){
     const errorsPercentageText = document.getElementById("errors-percentage-value");
     const selectedTextTitle = document.getElementById("selected-text-title");
     const selectedTextInfo = document.getElementById("selected-text-info");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    ctx.canvas.width = 200;
+    ctx.canvas.height = 100;
+
     const muteBtn = document.getElementById("mute");
     const buzzAudio = document.getElementById("buzzAudio");
 
@@ -189,7 +220,8 @@ window.onload = function (){
     let charCounter;
     let errorsCounter;
     let startTime;
-
+    let netWPM;
+    
     gameBtn.addEventListener("click", function(){
         if(!gameBtn.classList.contains("stop")){
             startGame();

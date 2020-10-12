@@ -255,7 +255,7 @@ footer a{
 
 .stats-area{
     display: grid;
-    grid-template-columns: 5fr 1fr 7fr 1fr;
+    grid-template-columns: 5fr 1fr 6fr 1fr;
     grid-gap: 0px;
     padding:15px;
     background-color: rgba(37, 37, 37, 0.726);
@@ -281,6 +281,13 @@ footer a{
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently 
                     supported by Chrome, Edge, Opera and Firefox */
+}
+
+#canvas{
+    border-color: white;
+    border-width: 1px;
+    height:100px;
+    width:200px;
 }
 
 @keyframes flicker{
