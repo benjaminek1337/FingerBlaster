@@ -97,8 +97,29 @@ footer a{
 .options-area{
     background-color: rgba(250, 250, 250, 0.733);;
     margin-bottom: 10px;
+    padding-bottom: 10px;
     border-radius: 10px;
     display: flex;
+}
+
+#text-selector{
+    outline: none;
+    height:27px;
+    width:200px;
+    background-color: rgba(250, 250, 250, 0.733);
+    font-size: medium;
+    text-align:left;
+    border-width: 1px;
+    border-style: solid;
+    border-color:#696969;
+    border-radius: 10px;
+    margin-top:17px;
+    margin-bottom:5px;
+}
+
+#text-selector-label{
+    font-size: medium;
+    margin-left:10px;
 }
 
 #options-box{
@@ -106,38 +127,18 @@ footer a{
 }
 
 .radio-area{
-    margin-top:5px;
+    margin-top:10px;
     margin-left:20px;
 }
 
 .checkbox-area{
+    margin-top: 3px;
     margin-left:20px;
-}
-
-#text-selector{
-    outline: none;
-    height:30px;
-    width:200px;
-    background-color: rgba(250, 250, 250, 0.733);
-    font-size: larger;
-    text-align:left;
-    border-width: 1px;
-    border-style: solid;
-    border-color:#696969;
-    border-radius: 10px;
-    margin-top:8px;
-    margin-bottom:10px;
-}
-
-#text-selector-label{
-    font-size: larger;
-    margin-left:10px;
-    margin-right:5px;
 }
 
 .toggle-area{
     float:right;
-    width: 40%;
+    width: 55%;
 }
 
 #selected-text-title{
@@ -244,18 +245,22 @@ footer a{
 #mute + label {
     padding:0;
     background:url(../img/mute.png);
-    height:30px;
-    width:30px;
+    height:35px;
+    width:35px;
+    background-repeat: no-repeat;
     cursor: pointer;
+    margin-top:15px;
+    margin-left: 15px;
 }
 
 #mute:checked + label {
     background:url(../img/unmute.png);
+    background-repeat: no-repeat;
 }
 
 .stats-area{
     display: grid;
-    grid-template-columns: 5fr 1fr 6fr 1fr;
+    grid-template-columns: 5fr 1fr 6fr;
     grid-gap: 0px;
     padding:15px;
     background-color: rgba(37, 37, 37, 0.726);
@@ -283,11 +288,13 @@ footer a{
                     supported by Chrome, Edge, Opera and Firefox */
 }
 
-#canvas{
-    border-color: white;
+.stats-canvas-area {
+    border-style: solid;
+    border-color: cornflowerblue;
     border-width: 1px;
     height:100px;
-    width:200px;
+    margin-left:10px;
+    background: url(../img/canvas-bg.png);
 }
 
 @keyframes flicker{

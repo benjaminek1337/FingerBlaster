@@ -89,7 +89,7 @@ window.onload = function (){
         errorsPercentageText.innerHTML = "100%";
         gameBtn.classList.add("stop");
         ctx.canvas.width = ctx.canvas.width;
-        ctx.moveTo(0,0);
+        ctx.moveTo(0,50);
     }
     
     function endGame(){
@@ -178,14 +178,14 @@ window.onload = function (){
 
     function drawCanvas(prevWPM){
         ctx.strokeStyle = "#ffffff";
-        if(charCounter > 160){
+        if(charCounter > 200){
             let imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
             ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
             ctx.putImageData(imageData, 0, 0);
             ctx.beginPath();
             ctx.lineWidth = 2;
-            ctx.moveTo(159, (ctx.canvas.height - prevWPM));
-            ctx.lineTo(160, (ctx.canvas.height - netWPM));
+            ctx.moveTo(199, (ctx.canvas.height - prevWPM));
+            ctx.lineTo(200, (ctx.canvas.height - netWPM));
             ctx.stroke();
         }
         else{
