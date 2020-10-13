@@ -79,7 +79,7 @@ window.onload = function (){
         errorsPercentageText.innerHTML = "100%";
         gameBtn.classList.add("stop");
         ctx.canvas.width = ctx.canvas.width;
-        ctx.moveTo(0,50);
+        ctx.moveTo(-1,100);
     }
     
     function endGame(){
@@ -192,11 +192,11 @@ window.onload = function (){
             ctx.putImageData(imageData, 0, 0);
             ctx.beginPath();
             ctx.lineWidth = 2;
-            ctx.moveTo(189, (ctx.canvas.height - prevWPM));
-            ctx.lineTo(190, (ctx.canvas.height - netWPM));
+            ctx.moveTo(188, (ctx.canvas.height - prevWPM));
+            ctx.lineTo(189, (ctx.canvas.height - netWPM));
         }
         else{
-            ctx.lineTo(charCounter, (ctx.canvas.height - netWPM));
+            ctx.lineTo((charCounter - 1), (ctx.canvas.height - netWPM));
         }
         ctx.stroke();
     }
