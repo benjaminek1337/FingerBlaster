@@ -42,7 +42,7 @@ header {
 .logo-side-text {
     position: absolute;
     left: 49%;
-    top: 4%;
+    top: 40px;
     font-family: "mr-dafoe";
     font-size: 90px;
     transform:rotate(-15deg);
