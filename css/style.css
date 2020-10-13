@@ -294,7 +294,8 @@ footer a{
     border-color: cornflowerblue;
     border-width: 1px;
     height:100px;
-    margin-left:10px;
+    width:200px;
+    margin-left:30px;
     background: url(../img/canvas-bg.png);
 }
 

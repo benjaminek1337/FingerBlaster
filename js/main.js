@@ -186,14 +186,14 @@ window.onload = function (){
 
     function drawCanvas(prevWPM){
         ctx.strokeStyle = "#ff5cf1";
-        if(charCounter > 200){
-            let imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
+        if(charCounter > 190){
+            const imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
             ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
             ctx.putImageData(imageData, 0, 0);
             ctx.beginPath();
             ctx.lineWidth = 2;
-            ctx.moveTo(199, (ctx.canvas.height - prevWPM));
-            ctx.lineTo(200, (ctx.canvas.height - netWPM));
+            ctx.moveTo(189, (ctx.canvas.height - prevWPM));
+            ctx.lineTo(190, (ctx.canvas.height - netWPM));
         }
         else{
             ctx.lineTo(charCounter, (ctx.canvas.height - netWPM));
