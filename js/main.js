@@ -8,6 +8,7 @@ window.onload = function (){
         fillTextArea();
         fillTextArray();
         setInfoText();
+        textinput.disabled = true;
     }
 
     function loadJSON(callback){
