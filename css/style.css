@@ -1,6 +1,3 @@
-@import url(https://fonts.googleapis.com/css?family=Righteous);
-@import url(https://fonts.googleapis.com/css?family=Mr+Dafoe);
-
 html{
     background:url(../img/background-laser3.jpg) no-repeat;
     background-size: cover;
@@ -25,12 +22,9 @@ header {
     padding-top:20px;
 }
 
-h1{
-    text-align:center;
-}
-
 .logo-main-text {
-    font-family: 'Candal', sans-serif;
+    text-align:center;
+    font-family: "candal";
     font-size: 85px;
     font-style: italic;
     -webkit-text-stroke: 0.1px #fa87f4;
@@ -44,7 +38,7 @@ h1{
     position: absolute;
     left: 49%;
     top: 4%;
-    font-family: 'Mr Dafoe', cursive;
+    font-family: "mr-dafoe";
     font-size: 90px;
     transform:rotate(-15deg);
     -ms-transform:rotate(-15deg); /* IE 9 */
@@ -63,9 +57,9 @@ h1{
 main{
     background-color: rgba(245, 245, 245, 0.432);
     padding:0px;
-    min-height:70%;
     padding:10px;
-    padding-bottom:0px;
+    padding-bottom:10px;
+
 }
 
 footer {
@@ -87,6 +81,7 @@ footer span{
     margin-left:20px;
     color:white;
 }
+
 footer a{
     font-size:1.1em;
     color: white;
@@ -113,38 +108,59 @@ footer a{
     border-style: solid;
     border-color:#696969;
     border-radius: 10px;
-    margin-top:17px;
-    margin-bottom:5px;
 }
 
 #text-selector-label{
     font-size: medium;
-    margin-left:10px;
+    text-align: center;
+    margin-top:5px;
+    margin-bottom:5px;
 }
 
 #options-box{
     flex: 1;
 }
 
+#text-selector-label, #text-selector{
+    display: block;
+    margin-left:20px;
+}
+
 .radio-area{
     margin-top:10px;
-    margin-left:20px;
+    margin-left:49px;
 }
 
 .checkbox-area{
     margin-top: 3px;
-    margin-left:20px;
+    margin-left:50px;
 }
 
-.toggle-area{
-    float:right;
-    width: 55%;
+#mute{
+    display:none;
+}
+
+#mute + label {
+    padding:0;
+    background:url(../img/mute.png);
+    height:35px;
+    width:35px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    margin-top:15px;
+    margin-left: 40px;
+}
+
+#mute:checked + label {
+    background:url(../img/unmute.png);
+    background-repeat: no-repeat;
 }
 
 #selected-text-title{
     margin:0;
     font-family: 'Candal', sans-serif;
     text-decoration: underline;
+    color: rgb(165, 72, 157);
 }
 
 #selected-text-info{
@@ -164,7 +180,6 @@ footer a{
 #game-textarea {
     resize:none;
     color:black;
-
     text-align: left;
     padding:10px;
     margin-bottom:10px;
@@ -238,26 +253,6 @@ footer a{
     background-size: cover;
 }
 
-#mute{
-    display:none;
-}
-
-#mute + label {
-    padding:0;
-    background:url(../img/mute.png);
-    height:35px;
-    width:35px;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    margin-top:15px;
-    margin-left: 15px;
-}
-
-#mute:checked + label {
-    background:url(../img/unmute.png);
-    background-repeat: no-repeat;
-}
-
 .stats-area{
     display: grid;
     grid-template-columns: 5fr 1fr 6fr;
@@ -266,7 +261,6 @@ footer a{
     background-color: rgba(37, 37, 37, 0.726);
     color:white;
     border-radius: 10px;
-    font-family: 'Candal', sans-serif;
 }
 
 .stats-text-area{
@@ -310,4 +304,15 @@ footer a{
     3%{color: rgba(255, 0, 242, 0.576);}
     100%{color: rgba(255, 0, 242, 0.576);}
 }
+
+@font-face {
+    font-family: mr-dafoe;
+    src:url(../font/MrDafoe-Regular.ttf);
+}
+
+@font-face {
+    font-family: candal;
+    src:url(../font/Candal-Regular.ttf);
+}
+
                                     

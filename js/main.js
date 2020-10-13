@@ -1,11 +1,11 @@
 window.onload = function (){
-    
+    //TODO - Kommentera koden
     function onInit(){
         loadJSON(function(response) {
             texts = JSON.parse(response);
         });
         fillTextSelector();
-        fillTextArea(); //Relik från tidigare. Ersätt mot aktiv text i listan
+        fillTextArea();
         fillTextArray();
         setInfoText();
     }
@@ -40,12 +40,6 @@ window.onload = function (){
         }
     }
 
-    function clearTextSelector(){
-        for (let i = selector.options.length - 1; i >= 0; i--){
-            selector.options[i] = null;
-        }
-    }
-
     function fillTextArea(){
        let span, node, text;
        text = texts.find(t => t.title == selector.value)
@@ -59,21 +53,17 @@ window.onload = function (){
             textarea.appendChild(span);
         }
     }
+    
+    function fillTextArray(){
+        chars = Array.from(textarea.querySelectorAll("span"));
+    }
 
     function setInfoText(){
         const text = texts.find(t => t.title == selector.value);
+        const wordCount = text.text.split(" ").length;
         selectedTextTitle.innerHTML = text.title;
-        let wordCount = text.text.split(" ").length;
         selectedTextInfo.innerHTML = text.author + " (" + wordCount + " ord, " + 
         chars.length + " tecken)"
-    }
-
-    function clearText(){
-        textarea.innerHTML="";
-    }
-
-    function fillTextArray(){
-        chars = Array.from(textarea.querySelectorAll("span"));
     }
 
     function startGame(){
@@ -112,15 +102,29 @@ window.onload = function (){
     }
 
     function resetCounters(){
-        charCounter = 0;
-        errorsCounter = 0;
+        if(charCounter != 0)
+            charCounter = 0;
+        if(errorsCounter != 0)
+            errorsCounter = 0;
     }
 
     function resetLetters(){
-        for (let i = 0; i < chars.length; i++) {
-            const char = chars[i];
-            char.className = "";
+        if(chars.length > 0){
+            for (let i = 0; i < chars.length; i++) {
+                const char = chars[i];
+                char.className = "";
+            }
         }
+    }
+
+    function clearTextSelector(){
+        for (let i = selector.options.length - 1; i >= 0; i--){
+            selector.options[i] = null;
+        }
+    }
+
+    function clearText(){
+        textarea.innerHTML="";
     }
 
     function markActiveChar(){
@@ -133,7 +137,7 @@ window.onload = function (){
     }
 
     function markCorrectChar(key){
-        if(checkbox.checked && char.innerHTML.toLowerCase() == key.toLowerCase()){
+        if(chkCaseToggle.checked && char.innerHTML.toLowerCase() == key.toLowerCase()){
             char.classList.add("correct-char");
         }
         else if(char.innerHTML == key){
@@ -171,13 +175,17 @@ window.onload = function (){
         errorsText.innerHTML = errorsCounter;
     }
 
-    function setErrorsPercentageText(){
+    function getErrorsPercentage(){
         let percent = Math.round(100 - ((errorsCounter * 100) / charCounter));
+        setErrorsPercentageText(percent);
+    }
+
+    function setErrorsPercentageText(percent){
         errorsPercentageText.innerHTML = percent + "%" 
     }
 
     function drawCanvas(prevWPM){
-        ctx.strokeStyle = "#ffffff";
+        ctx.strokeStyle = "#ff5cf1";
         if(charCounter > 200){
             let imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
             ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
@@ -186,17 +194,16 @@ window.onload = function (){
             ctx.lineWidth = 2;
             ctx.moveTo(199, (ctx.canvas.height - prevWPM));
             ctx.lineTo(200, (ctx.canvas.height - netWPM));
-            ctx.stroke();
         }
         else{
             ctx.lineTo(charCounter, (ctx.canvas.height - netWPM));
-            ctx.stroke();
         }
+        ctx.stroke();
     }
     
     const selector = document.getElementById("text-selector");
     const radioBtns = Array.from(document.querySelectorAll(".radio-lng"));
-    const checkbox = document.getElementById("case-toggle");
+    const chkCaseToggle = document.getElementById("case-toggle");
     const textarea = document.getElementById("game-textarea");
     const textinput = document.getElementById("textinput");
     const gameBtn = document.getElementById("game-btn");
@@ -251,7 +258,7 @@ window.onload = function (){
         })
     }
 
-    checkbox.addEventListener("click", function(){
+    chkCaseToggle.addEventListener("click", function(){
         stopGame();
     })
 
@@ -267,7 +274,7 @@ window.onload = function (){
             markCorrectChar(key);
             charCounter++;
             getWPM();
-            setErrorsPercentageText()
+            getErrorsPercentage()
             if(chars.length > charCounter){
                 markActiveChar();
             }
