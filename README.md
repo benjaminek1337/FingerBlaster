@@ -5,7 +5,7 @@ Windows 10, Visual Studio Code, Git version: 2.28.0.windows.1
 Perspective: What does the laboration aim to accomplish?
 Should specify concrete goal(s) which will enable some discussion and analysis.
 
-Syftet med 
+Syftet med uppgiften är att utmana mig. Fysiskt samt mentalt.
 
 ## Procedures / Genomförande
 Steg under utvecklingsprocessen
