@@ -22,6 +22,11 @@ header {
     padding-top:20px;
 }
 
+#header-img {
+
+    height:90px;
+}
+
 .logo-main-text {
     text-align:center;
     font-family: "candal";
@@ -45,6 +50,8 @@ header {
     -webkit-transform:rotate(-15deg); /* Safari and Chrome */
     color: #ff00f293;
     margin: 0;
+    margin-top:15px;
+    margin-left:20px;
     text-shadow: 1px 2px 0px #F9D2D2;
 
     animation-name:flicker;
