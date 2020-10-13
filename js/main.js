@@ -172,8 +172,8 @@ window.onload = function (){
     }
 
     function setErrorsPercentageText(){
-        let percent = (errorsCounter * 100) / charCounter;
-        errorsPercentageText.innerHTML = Math.round(100 - percent) + "%" 
+        let percent = Math.round(100 - ((errorsCounter * 100) / charCounter));
+        errorsPercentageText.innerHTML = percent + "%" 
     }
 
     function drawCanvas(prevWPM){
