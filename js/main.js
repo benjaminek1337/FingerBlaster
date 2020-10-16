@@ -89,6 +89,8 @@ function endGame(){
     textinput.disabled = true;
     textinput.value = "";
     startTime = null;
+    xAxisCounter = 0;
+    clearWPMTimer();
 }
 
 function stopGame(){
@@ -183,41 +185,38 @@ function getErrorsPercentage(){
 }
 
 function setErrorsPercentageText(percent){
-    errorsPercentageText.innerHTML = percent + "%" 
+    errorsPercentageText.innerHTML = percent + "%";
 }
 
 function drawCanvas(prevWPM){
     ctx.strokeStyle = "#ff5cf1";
-    if(charCounter > 190 && (chars.length - charCounter) > 10 && chars.length > 200){
+    if(xAxisCounter > (ctx.canvas.width - 10)){
         const imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
         ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
         ctx.putImageData(imageData, 0, 0);
         ctx.beginPath();
         ctx.lineWidth = 2;
-        ctx.moveTo(188, (ctx.canvas.height - prevWPM));
-        ctx.lineTo(189, (ctx.canvas.height - netWPM));
-    }
-    else if(chars.length - charCounter <= 10 && chars.length > 200){
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.moveTo((199 - (chars.length - charCounter)), (ctx.canvas.height - netWPM));
-        ctx.lineTo((200 - (chars.length - charCounter)), (ctx.canvas.height - netWPM));
+        ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - prevWPM));
+        ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - netWPM));
     }
     else{
-        ctx.lineTo((charCounter - 1), (ctx.canvas.height - netWPM));
+        ctx.lineTo((xAxisCounter - 1), (ctx.canvas.height - netWPM));
+        xAxisCounter++;
     }
     ctx.stroke();
 }
 
-//Försöka implementera på bättre sätt
 function WPMTimer(){
-    setTimeout(() => {
+    wpmTimer = setTimeout(() => {
         getWPM();
-        getErrorsPercentage();
-        if(charCounter < chars.length){
+        if(charCounter < (chars.length)){
             WPMTimer();
         }
     }, 200);
+}
+
+function clearWPMTimer(){
+    clearTimeout(wpmTimer);
 }
 
 const selector = document.getElementById("text-selector");
@@ -233,13 +232,13 @@ const errorsPercentageText = document.getElementById("errors-percentage-value");
 const selectedTextTitle = document.getElementById("selected-text-title");
 const selectedTextInfo = document.getElementById("selected-text-info");
 const canvas = document.getElementById("canvas");
+const muteBtn = document.getElementById("mute");
+const buzzAudio = document.getElementById("buzzAudio");
 const ctx = canvas.getContext("2d");
 ctx.canvas.width = 200;
 ctx.canvas.height = 100;
 
-const muteBtn = document.getElementById("mute");
-const buzzAudio = document.getElementById("buzzAudio");
-
+let wpmTimer;
 let texts;
 let chars;
 let char;
@@ -247,6 +246,7 @@ let charCounter;
 let errorsCounter;
 let startTime;
 let netWPM;
+let xAxisCounter = 0;
 
 gameBtn.addEventListener("click", () => {
     if(!gameBtn.classList.contains("stop")){
@@ -274,17 +274,18 @@ for (let i = 0; i < radioBtns.length; i++) {
         fillTextArea();
         fillTextArray();
         setInfoText();
-    })
+    });
 }
 
 chkCaseToggle.addEventListener("click", () => {
     stopGame();
-})
+});
 
 textinput.addEventListener("keydown", (event) => {
     let key = event.key;
     if(startTime == null){
         startTime = Date.now();
+        WPMTimer();
     }
     if(/^[a-öA-Ö,.:;'!\- ]$/.test(key)){
         if(key == " "){
@@ -292,17 +293,18 @@ textinput.addEventListener("keydown", (event) => {
         }
         markCorrectChar(key);
         charCounter++;
-        getWPM();
-        getErrorsPercentage()
+        getErrorsPercentage();
         if(chars.length > charCounter){
             markActiveChar();
         }
         else{
             char.classList.remove("active-char");
             gameBtn.classList.remove("stop");
+            getWPM();
+            getErrorsPercentage();
             endGame();
         }
     }
-})
+});
 
 window.addEventListener("load", onInit(), false);
