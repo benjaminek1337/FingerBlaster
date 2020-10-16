@@ -188,7 +188,7 @@ function setErrorsPercentageText(percent){
 
 function drawCanvas(prevWPM){
     ctx.strokeStyle = "#ff5cf1";
-    if(charCounter > 190){
+    if(charCounter > 190 && (chars.length - charCounter) > 10 && chars.length > 200){
         const imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
         ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
         ctx.putImageData(imageData, 0, 0);
@@ -196,6 +196,12 @@ function drawCanvas(prevWPM){
         ctx.lineWidth = 2;
         ctx.moveTo(188, (ctx.canvas.height - prevWPM));
         ctx.lineTo(189, (ctx.canvas.height - netWPM));
+    }
+    else if(chars.length - charCounter <= 10 && chars.length > 200){
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.lineTo((199 - (chars.length - charCounter)), (ctx.canvas.height - netWPM));
+        ctx.lineTo((200 - (chars.length - charCounter)), (ctx.canvas.height - netWPM));
     }
     else{
         ctx.lineTo((charCounter - 1), (ctx.canvas.height - netWPM));
