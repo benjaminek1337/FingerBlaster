@@ -200,8 +200,8 @@ function drawCanvas(prevWPM){
     else if(chars.length - charCounter <= 10 && chars.length > 200){
         ctx.beginPath();
         ctx.lineWidth = 2;
+        ctx.moveTo((199 - (chars.length - charCounter)), (ctx.canvas.height - netWPM));
         ctx.lineTo((199 - (chars.length - charCounter)), (ctx.canvas.height - netWPM));
-        ctx.lineTo((200 - (chars.length - charCounter)), (ctx.canvas.height - netWPM));
     }
     else{
         ctx.lineTo((charCounter - 1), (ctx.canvas.height - netWPM));
