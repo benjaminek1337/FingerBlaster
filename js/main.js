@@ -231,9 +231,10 @@ const errorsText = document.getElementById("errors-value");
 const errorsPercentageText = document.getElementById("errors-percentage-value");
 const selectedTextTitle = document.getElementById("selected-text-title");
 const selectedTextInfo = document.getElementById("selected-text-info");
-const canvas = document.getElementById("canvas");
 const muteBtn = document.getElementById("mute");
 const buzzAudio = document.getElementById("buzzAudio");
+
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 ctx.canvas.width = 200;
 ctx.canvas.height = 100;
