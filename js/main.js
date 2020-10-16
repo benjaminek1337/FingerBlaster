@@ -238,7 +238,6 @@ const ctx = canvas.getContext("2d");
 ctx.canvas.width = 200;
 ctx.canvas.height = 100;
 
-let wpmTimer;
 let texts;
 let chars;
 let char;
@@ -246,6 +245,7 @@ let charCounter;
 let errorsCounter;
 let startTime;
 let netWPM;
+let wpmTimer;
 let xAxisCounter = 0;
 
 gameBtn.addEventListener("click", () => {
