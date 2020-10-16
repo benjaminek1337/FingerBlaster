@@ -81,7 +81,7 @@ function startGame(){
     errorsText.innerHTML = "0";
     errorsPercentageText.innerHTML = "100%";
     gameBtn.classList.add("stop");
-    ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
+    ctx.canvas.width = ctx.canvas.width;
     ctx.moveTo(-1,100);
 }
 
@@ -103,7 +103,7 @@ function stopGame(){
     resetCounters()
     resetLetters();
     gameBtn.classList.remove("stop");
-    ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
+    ctx.canvas.width = ctx.canvas.width;
 }
 
 function resetCounters(){
@@ -203,6 +203,7 @@ function drawCanvas(prevWPM){
         ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
         ctx.putImageData(imageData, 0, 0);
         ctx.beginPath();
+        ctx.lineWidth = 2;
         ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - prevWPM));
         ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - netWPM));
     }
