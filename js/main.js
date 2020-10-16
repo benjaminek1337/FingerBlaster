@@ -1,9 +1,10 @@
 
 //TODO - Kommentera koden
 function onInit(){
-    loadJSON(function(response) {
+    loadJSON( (response) => {
         texts = JSON.parse(response);
     });
+
     fillTextSelector();
     fillTextArea();
     fillTextArray();
@@ -20,7 +21,7 @@ function loadJSON(callback){
             callback(obj.responseText);
         }
     };
-    obj.send(null);  
+    obj.send();  
 }
 
 function fillTextSelector(){
@@ -230,7 +231,7 @@ let errorsCounter;
 let startTime;
 let netWPM;
 
-gameBtn.addEventListener("click", function(){
+gameBtn.addEventListener("click", () => {
     if(!gameBtn.classList.contains("stop")){
         startGame();
     } else {
@@ -238,7 +239,7 @@ gameBtn.addEventListener("click", function(){
     }
 });
 
-selector.addEventListener("change", function(){
+selector.addEventListener("change", () => {
     stopGame();
     clearText();
     fillTextArea();
@@ -248,7 +249,7 @@ selector.addEventListener("change", function(){
 
 for (let i = 0; i < radioBtns.length; i++) {
     const rb = radioBtns[i];
-    rb.addEventListener("click", function(){
+    rb.addEventListener("click", () => {
         stopGame();
         clearTextSelector();
         fillTextSelector();
@@ -259,11 +260,11 @@ for (let i = 0; i < radioBtns.length; i++) {
     })
 }
 
-chkCaseToggle.addEventListener("click", function(){
+chkCaseToggle.addEventListener("click", () => {
     stopGame();
 })
 
-textinput.addEventListener("keydown", function(event){
+textinput.addEventListener("keydown", (event) => {
     let key = event.key;
     if(startTime == null){
         startTime = Date.now();
