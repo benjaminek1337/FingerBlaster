@@ -209,6 +209,17 @@ function drawCanvas(prevWPM){
     ctx.stroke();
 }
 
+//Försöka implementera på bättre sätt
+function WPMTimer(){
+    setTimeout(() => {
+        getWPM();
+        getErrorsPercentage();
+        if(charCounter < chars.length){
+            WPMTimer();
+        }
+    }, 200);
+}
+
 const selector = document.getElementById("text-selector");
 const radioBtns = Array.from(document.querySelectorAll(".radio-lng"));
 const chkCaseToggle = document.getElementById("case-toggle");
