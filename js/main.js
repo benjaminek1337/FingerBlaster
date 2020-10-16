@@ -9,6 +9,7 @@ function onInit(){
     fillTextArea();
     fillTextArray();
     setInfoText();
+    initCanvas();
     textinput.disabled = true;
 }
 
@@ -80,7 +81,7 @@ function startGame(){
     errorsText.innerHTML = "0";
     errorsPercentageText.innerHTML = "100%";
     gameBtn.classList.add("stop");
-    ctx.canvas.width = ctx.canvas.width;
+    ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
     ctx.moveTo(-1,100);
 }
 
@@ -102,7 +103,7 @@ function stopGame(){
     resetCounters()
     resetLetters();
     gameBtn.classList.remove("stop");
-    ctx.canvas.width = ctx.canvas.width;
+    ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
 }
 
 function resetCounters(){
@@ -188,6 +189,13 @@ function setErrorsPercentageText(percent){
     errorsPercentageText.innerHTML = percent + "%";
 }
 
+function initCanvas(){
+    ctx.canvas.width = 200;
+    ctx.canvas.height = 100;
+    ctx.strokeStyle = "#ff5cf1";
+    ctx.lineWidth = 2;
+}
+
 function drawCanvas(prevWPM){
     ctx.strokeStyle = "#ff5cf1";
     if(xAxisCounter > (ctx.canvas.width - 10)){
@@ -195,7 +203,6 @@ function drawCanvas(prevWPM){
         ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
         ctx.putImageData(imageData, 0, 0);
         ctx.beginPath();
-        ctx.lineWidth = 2;
         ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - prevWPM));
         ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - netWPM));
     }
@@ -212,7 +219,7 @@ function WPMTimer(){
         if(charCounter < (chars.length)){
             WPMTimer();
         }
-    }, 200);
+    }, 50);
 }
 
 function clearWPMTimer(){
@@ -236,8 +243,6 @@ const buzzAudio = document.getElementById("buzzAudio");
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-ctx.canvas.width = 200;
-ctx.canvas.height = 100;
 
 let texts;
 let chars;
