@@ -1,5 +1,91 @@
 
 //TODO - Kommentera koden
+const selector = document.getElementById("text-selector");
+const radioBtns = Array.from(document.querySelectorAll(".radio-lng"));
+const chkCaseToggle = document.getElementById("case-toggle");
+const textarea = document.getElementById("game-textarea");
+const textinput = document.getElementById("textinput");
+const gameBtn = document.getElementById("game-btn");
+const wpmText = document.getElementById("wpm-value");
+const netWPMText = document.getElementById("net-wpm-value");
+const errorsText = document.getElementById("errors-value");
+const errorsPercentageText = document.getElementById("errors-percentage-value");
+const selectedTextTitle = document.getElementById("selected-text-title");
+const selectedTextInfo = document.getElementById("selected-text-info");
+const muteBtn = document.getElementById("mute");
+const buzzAudio = document.getElementById("buzzAudio");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let texts;
+let chars;
+let char;
+let charCounter;
+let errorsCounter;
+let startTime;
+let netWPM;
+let wpmTimer;
+let xAxisCounter = 0;
+
+gameBtn.addEventListener("click", () => {
+    if(!gameBtn.classList.contains("stop")){
+        startGame();
+    } else {
+        stopGame();
+    }
+});
+
+selector.addEventListener("change", () => {
+    stopGame();
+    clearText();
+    fillTextArea();
+    fillTextArray();
+    setInfoText();
+});
+
+for (let i = 0; i < radioBtns.length; i++) {
+    const rb = radioBtns[i];
+    rb.addEventListener("click", () => {
+        stopGame();
+        clearTextSelector();
+        fillTextSelector();
+        clearText();
+        fillTextArea();
+        fillTextArray();
+        setInfoText();
+    });
+}
+
+chkCaseToggle.addEventListener("click", () => {
+    stopGame();
+});
+
+textinput.addEventListener("keydown", (event) => {
+    let key = event.key;
+    if(startTime == null){
+        startTime = Date.now();
+        WPMTimer();
+    }
+    if(/^[a-öA-Ö,.:;'!\- ]$/.test(key)){
+        if(key == " "){
+            textinput.value="";
+        }
+        markCorrectChar(key);
+        charCounter++;
+        getErrorsPercentage();
+        if(chars.length > charCounter){
+            markActiveChar();
+        }
+        else{
+            char.classList.remove("active-char");
+            gameBtn.classList.remove("stop");
+            getWPM();
+            getErrorsPercentage();
+            endGame();
+        }
+    }
+});
+
 function onInit(){
     loadJSON( (response) => {
         texts = JSON.parse(response);
@@ -17,7 +103,7 @@ function loadJSON(callback){
     const obj = new XMLHttpRequest();
     obj.overrideMimeType("application/json");
     obj.open('GET', 'texts.json', false);
-    obj.onreadystatechange = function () {
+    obj.onreadystatechange = () => {
         if (obj.readyState == 4 && obj.status == "200") {
             callback(obj.responseText);
         }
@@ -224,92 +310,5 @@ function WPMTimer(){
 function clearWPMTimer(){
     clearTimeout(wpmTimer);
 }
-
-const selector = document.getElementById("text-selector");
-const radioBtns = Array.from(document.querySelectorAll(".radio-lng"));
-const chkCaseToggle = document.getElementById("case-toggle");
-const textarea = document.getElementById("game-textarea");
-const textinput = document.getElementById("textinput");
-const gameBtn = document.getElementById("game-btn");
-const wpmText = document.getElementById("wpm-value");
-const netWPMText = document.getElementById("net-wpm-value");
-const errorsText = document.getElementById("errors-value");
-const errorsPercentageText = document.getElementById("errors-percentage-value");
-const selectedTextTitle = document.getElementById("selected-text-title");
-const selectedTextInfo = document.getElementById("selected-text-info");
-const muteBtn = document.getElementById("mute");
-const buzzAudio = document.getElementById("buzzAudio");
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-let texts;
-let chars;
-let char;
-let charCounter;
-let errorsCounter;
-let startTime;
-let netWPM;
-let wpmTimer;
-let xAxisCounter = 0;
-
-gameBtn.addEventListener("click", () => {
-    if(!gameBtn.classList.contains("stop")){
-        startGame();
-    } else {
-        stopGame();
-    }
-});
-
-selector.addEventListener("change", () => {
-    stopGame();
-    clearText();
-    fillTextArea();
-    fillTextArray();
-    setInfoText();
-});
-
-for (let i = 0; i < radioBtns.length; i++) {
-    const rb = radioBtns[i];
-    rb.addEventListener("click", () => {
-        stopGame();
-        clearTextSelector();
-        fillTextSelector();
-        clearText();
-        fillTextArea();
-        fillTextArray();
-        setInfoText();
-    });
-}
-
-chkCaseToggle.addEventListener("click", () => {
-    stopGame();
-});
-
-textinput.addEventListener("keydown", (event) => {
-    let key = event.key;
-    if(startTime == null){
-        startTime = Date.now();
-        WPMTimer();
-    }
-    if(/^[a-öA-Ö,.:;'!\- ]$/.test(key)){
-        if(key == " "){
-            textinput.value="";
-        }
-        markCorrectChar(key);
-        charCounter++;
-        getErrorsPercentage();
-        if(chars.length > charCounter){
-            markActiveChar();
-        }
-        else{
-            char.classList.remove("active-char");
-            gameBtn.classList.remove("stop");
-            getWPM();
-            getErrorsPercentage();
-            endGame();
-        }
-    }
-});
 
 window.addEventListener("load", onInit(), false);
