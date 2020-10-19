@@ -192,8 +192,6 @@ function setErrorsPercentageText(percent){
 function initCanvas(){
     ctx.canvas.width = 200;
     ctx.canvas.height = 100;
-    ctx.strokeStyle = "#ff5cf1";
-    ctx.lineWidth = 2;
 }
 
 function drawCanvas(prevWPM){
@@ -202,8 +200,8 @@ function drawCanvas(prevWPM){
         const imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
         ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
         ctx.putImageData(imageData, 0, 0);
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.lineWidth = 2;
         ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - prevWPM));
         ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - netWPM));
     }
@@ -220,7 +218,7 @@ function WPMTimer(){
         if(charCounter < (chars.length)){
             WPMTimer();
         }
-    }, 50);
+    }, 80);
 }
 
 function clearWPMTimer(){
