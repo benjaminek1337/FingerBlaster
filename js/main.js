@@ -83,6 +83,19 @@ textinput.addEventListener("keydown", (event) => {
             getErrorsPercentage();
             endGame();
         }
+    } 
+    else if(key == "Backspace" && charCounter > 0){
+        charCounter--;
+        char.classList.remove("active-char");
+        markActiveChar();
+        if(char.classList.contains("incorrect-char")){
+            char.classList.remove("incorrect-char");
+            errorsCounter--;
+            setNrOfErrorsText();
+        }else if(char.classList.contains("correct-char")){
+            char.classList.remove("correct-char");
+        }
+        getErrorsPercentage();
     }
 });
 
