@@ -134,6 +134,7 @@ function fillTextSelector(){
             filteredTexts = texts.filter(t => t.language == "english");
             break;
     }
+    filteredTexts.sort((a,b) => (a.title > b.title) ? 1 : -1);
     for (let i = 0; i < filteredTexts.length; i++) {
         const text = filteredTexts[i];
         option = document.createElement("option");
