@@ -200,7 +200,7 @@ function drawCanvas(prevWPM){
         const imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
         ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
         ctx.putImageData(imageData, 0, 0);
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - prevWPM));
         ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - netWPM));
