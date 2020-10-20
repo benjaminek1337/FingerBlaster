@@ -60,8 +60,32 @@ chkCaseToggle.addEventListener("click", () => {
     stopGame();
 });
 
-textinput.addEventListener("keydown", (event) => {
-    let key = event.key;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    textinput.addEventListener("keyup", (event) => {
+        let key = event.key;
+        EvaluateKey(key);
+    });
+} else {
+    textinput.addEventListener("keydown", (event) => {
+        let key = event.key;
+        EvaluateKey(key);
+    });
+}
+
+function onInit(){
+    loadJSON( (response) => {
+        texts = JSON.parse(response);
+    });
+
+    fillTextSelector();
+    fillTextArea();
+    fillTextArray();
+    setInfoText();
+    initCanvas();
+    textinput.disabled = true;
+}
+
+function EvaluateKey(key){
     if(startTime == null){
         startTime = Date.now();
         WPMTimer();
@@ -97,19 +121,6 @@ textinput.addEventListener("keydown", (event) => {
         }
         getErrorsPercentage();
     }
-});
-
-function onInit(){
-    loadJSON( (response) => {
-        texts = JSON.parse(response);
-    });
-
-    fillTextSelector();
-    fillTextArea();
-    fillTextArray();
-    setInfoText();
-    initCanvas();
-    textinput.disabled = true;
 }
 
 function loadJSON(callback){
