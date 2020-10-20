@@ -60,17 +60,10 @@ chkCaseToggle.addEventListener("click", () => {
     stopGame();
 });
 
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    textinput.addEventListener("keyup", (event) => {
-        let key = event.key;
-        EvaluateKey(key);
-    });
-} else {
-    textinput.addEventListener("keydown", (event) => {
-        let key = event.key;
-        EvaluateKey(key);
-    });
-}
+textinput.addEventListener("keydown", (event) => {
+    let key = event.key;
+    EvaluateKey(key);
+});
 
 function onInit(){
     loadJSON( (response) => {
