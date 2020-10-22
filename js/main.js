@@ -97,7 +97,7 @@ function EvaluateKey(key){
     //Vid första slag på tangentbord
     if(startTime == null){
         startTime = Date.now();
-        WPMTimer(); //Startar WPM-timer
+        setWPMInterval(); //Startar WPM-timer
     }
     // Om slaget är någon av tecknen
     if(/^[a-öA-Ö,.:;'!\- ]$/.test(key)){
@@ -190,8 +190,7 @@ function startGame(){
     resetLetters();
     markActiveChar();
     startTime = null; // Nollar starttiden
-    textinput.disabled = false; // Gör textinput tillgänglig för inmatning
-    textinput.focus(); // Ger fokus till textinput
+    textInputSettings();
     setWPMtext("--", "--", "0", "100%"); // Skickar in default-värden till stats
     gameBtn.classList.add("stop"); // Lägger till klassen stop till startknappen
     ctx.canvas.width = ctx.canvas.width; // Tar bort sträck från canvas
@@ -200,10 +199,8 @@ function startGame(){
 
 // Uppgifter som utförs vid spelets slut
 function endGame(){
-    clearWPMTimer();
-    textinput.blur(); // Tar bort fokus från textinput
-    textinput.disabled = true; // Gör textinput otillgänglig
-    textinput.value = ""; // Tar bort värde från textinput
+    clearWPMInterval();
+    textInputSettings();
     gameBtn.classList.remove("stop"); // Tar bort klassen stop från startknappen
     startTime = null; // Nollar starttiden
     xAxisCounter = 0; // Nollar grafens x-axelposition
@@ -234,6 +231,19 @@ function resetLetters(){
             char.className = "";
         }
     }
+}
+
+// Tillåter/spärrar input till textinput beroende på om spelet är startat eller ej
+// Rensar även fältet
+function textInputSettings(){
+    if(gameBtn.classList.contains("stop")){
+        textinput.disabled = true;
+        textinput.blur();
+    } else {
+        textinput.disabled = false;
+        textinput.focus();
+    }
+    textinput.value = ""; // Tar bort värde från textinput
 }
 
 // Rensar fält i selectorn
@@ -358,19 +368,16 @@ function drawCanvas(){
 }
 
 // Funktion för att sätta timer för WPM-beräkning och kör de funktionerna enligt satt ms
-function WPMTimer(){
-    wpmTimer = setTimeout(() => {
+function setWPMInterval(){
+    wpmTimer = setInterval(() => {
         setWPMtext(getGrossWPM(), getNetWPM(), errorsCounter, getErrorsPercentage()  + "%");
         drawCanvas();
-        if(charCounter < (chars.length)){
-            WPMTimer();
-        }
     }, 100);
 }
 
 // Avslutar timern
-function clearWPMTimer(){
-    clearTimeout(wpmTimer);
+function clearWPMInterval(){
+    clearInterval(wpmTimer);
 }
 
 // Event-lister för när fönstret laddats
