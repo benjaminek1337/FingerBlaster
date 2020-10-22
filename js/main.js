@@ -25,11 +25,9 @@ const ctx = canvas.getContext("2d");
 
 let texts; // Array med texter från JSON-fil
 let chars; // Array över samtliga tecken i vald text
-let char; // Aktiv bokstav från chars
-let charCounter; // Antalet tecken som utvärderats
-let errorsCounter; // Antalet felslag som registrerats
+let charCounter; // Värdet på aktiv bokstav
+let errorsCounter; // Antalet felslag som registrerats hittills
 let startTime; // Timestamp vid första slag på tangentbord
-let netWPM; // Ord/minuten justerad med felslag
 let wpmTimer; // Timer som kör ord/minuten funktioner
 let xAxisCounter = 0; // variabel till grafens x-axelvärde
 
@@ -48,7 +46,7 @@ gameBtn.addEventListener("click", () => {
 // Vid byte av text i selectorn
 selector.addEventListener("change", () => {
     stopGame();
-    clearText();
+    clearTextArea();
     fillTextArea();
     fillTextArray();
     setInfoText();
@@ -61,7 +59,7 @@ for (let i = 0; i < radioBtns.length; i++) {
         stopGame();
         clearTextSelector();
         fillTextSelector();
-        clearText();
+        clearTextArea();
         fillTextArea();
         fillTextArray();
         setInfoText();
@@ -110,34 +108,21 @@ function EvaluateKey(key){
             textinput.value=""; //Töm input
         }
         markCorrectChar(key);
-        charCounter++;
-        getErrorsPercentage();
         // Så länge det finns fler tecken kvar att utvärdera
         if(chars.length > charCounter){
             markActiveChar();
         }
         // När det inte finns fler tecken att utvärdera
         else{
-            char.classList.remove("active-char");
+            chars[charCounter - 1].classList.remove("active-char");
             gameBtn.classList.remove("stop");
-            getWPM();
-            getErrorsPercentage();
+            setWPMtext()
             endGame();
         }
     } 
     // Vid radera-knappen, backa och ta bort värden
     else if(key == "Backspace" && charCounter > 0){
-        charCounter--;
-        char.classList.remove("active-char");
-        markActiveChar();
-        if(char.classList.contains("incorrect-char")){
-            char.classList.remove("incorrect-char");
-            errorsCounter--;
-            setNrOfErrorsText();
-        }else if(char.classList.contains("correct-char")){
-            char.classList.remove("correct-char");
-        }
-        getErrorsPercentage();
+       correctError();
     }
 }
 
@@ -231,6 +216,7 @@ function endGame(){
     clearWPMTimer();
 }
 
+// Uppgifter som utförs då spelet avbryts
 function stopGame(){
     // Tar bort värden från statistikelement
     wpmText.innerHTML ="";
@@ -270,77 +256,88 @@ function clearTextSelector(){
 }
 
 // Rensar textarean
-function clearText(){
+function clearTextArea(){
     textarea.innerHTML="";
 }
 
-// Sätter värde till char från aktuell chars genom att välja span-element från arrayen
-// chars med id motsvarande aktuell charCounter
 // Highlightar aktuell char med active-char klass, tar bort den klassen från tidigare
 // element
 function markActiveChar(){
-    char = chars.find(c => c.id == charCounter);
-    if(char.id != 0){
-        const previousChar = chars.find(c => c.id == char.id - 1);
+    if(chars[charCounter].id != 0){
+        const previousChar = chars.find(c => c.id == chars[charCounter].id - 1);
         previousChar.classList.remove("active-char");
     }
-    char.classList.add("active-char");
+    chars[charCounter].classList.add("active-char");
 }
 
 // Tar emot tecken, utvärderar mot aktuell char (beroende på case-sensitivity)
-// Ökar errorsCounter vid felslag, spelar ljud vid fel om ej mutad
+// Ökar errorsCounter vid felslag, ökar charCounter, spelar ljud vid fel om ej mutad
 // Sätter CSS-klass till char
 function markCorrectChar(key){
-    if(chkCaseToggle.checked && char.innerHTML.toLowerCase() == key.toLowerCase()){
-        char.classList.add("correct-char");
+    if(chkCaseToggle.checked && chars[charCounter].innerHTML.toLowerCase() == key.toLowerCase()){
+        chars[charCounter].classList.add("correct-char");
     }
-    else if(char.innerHTML == key){
-        char.classList.add("correct-char");
+    else if(chars[charCounter].innerHTML == key){
+        chars[charCounter].classList.add("correct-char");
     }
     else {
-        char.classList.add("incorrect-char");
+        chars[charCounter].classList.add("incorrect-char");
         errorsCounter++;
-        setNrOfErrorsText();
         if(!muteBtn.checked){
-            buzzAudio.play();
+            playErrorSound();
         }
     }
+    charCounter++;
 }
 
-//Tar aktuell tidsstämpel, jämför med starttid. Gör uträkningar om WPM-statistik
-function getWPM(){
+//Backar aktiva tecknet, minskar counters och tar bort klasser från backade span
+function correctError(){
+    charCounter--;
+    chars[charCounter + 1].classList.remove("active-char");
+    chars[charCounter].classList.add("active-char");
+    if(chars[charCounter].classList.contains("incorrect-char")){
+        chars[charCounter].classList.remove("incorrect-char");
+        errorsCounter--;
+    }else if(chars[charCounter].classList.contains("correct-char")){
+        chars[charCounter].classList.remove("correct-char");
+    }
+}
+
+function playErrorSound(){
+    buzzAudio.play();
+}
+
+// Returnerar tidsstämpel från tiden spelet startade tills nu
+function getElapsedTime(){
     let currentTime = Date.now();
     let elapsedTime = (currentTime - startTime) / 60000;
-    let grossWPM = Math.round((charCounter / 5) / elapsedTime);
-    let prevVPM;
-    if(netWPM != undefined){
-        prevVPM = netWPM;
-    }
-    netWPM = Math.round(grossWPM - (( errorsCounter / 5) / elapsedTime));
-    setWPMtext(grossWPM);
-    drawCanvas(prevVPM);
+    return elapsedTime;
 }
 
-//Tar emot total WPM, och sätter DOM-elementen (text) till aktuella värden
-function setWPMtext(grossWPM){
-    wpmText.innerHTML = grossWPM;
-    netWPMText.innerHTML = netWPM;
+// Räknar ut och returnerar bruttoWPM
+function getGrossWPM(){
+    let grossWPM = Math.round((charCounter / 5) / getElapsedTime());
+    return grossWPM;
 }
 
-//Sätter DOM-element för antal fel till värdet i errorsCounter
-function setNrOfErrorsText(){
-    errorsText.innerHTML = errorsCounter;
+// Räknar ut och returnerar nettoWPM
+function getNetWPM(){
+    let netWPM = Math.round(getGrossWPM() - (( errorsCounter / 5) / getElapsedTime()));
+    return netWPM;
 }
 
 //Räknar ut procent felslag
 function getErrorsPercentage(){
     let percent = Math.round(100 - ((errorsCounter * 100) / charCounter));
-    setErrorsPercentageText(percent);
+    return percent;
 }
 
-//Sätter DOM-element för procent felslag
-function setErrorsPercentageText(percent){
-    errorsPercentageText.innerHTML = percent + "%";
+//Tar emot total WPM, och sätter DOM-elementen (text) till aktuella värden
+function setWPMtext(){
+    wpmText.innerHTML = getGrossWPM();
+    netWPMText.innerHTML = getNetWPM();
+    errorsText.innerHTML = errorsCounter;
+    errorsPercentageText.innerHTML = getErrorsPercentage() + "%";
 }
 
 //Sätter höjd och bredd till canvas
@@ -350,7 +347,7 @@ function initCanvas(){
 }
 
 //Funktion för att rita ut graf över WPM i canvas
-function drawCanvas(prevWPM){
+function drawCanvas(){
     ctx.strokeStyle = "#ff5cf1"; //Färgen på linjen som ritas
     //Sparar en bild av canvasen just nu, flyttar den -1 i x-led och ritar en punkt till
     if(xAxisCounter > (ctx.canvas.width - 10)){
@@ -359,26 +356,27 @@ function drawCanvas(prevWPM){
         ctx.putImageData(imageData, 0, 0);
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - prevWPM));
-        ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - netWPM));
+        ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - getNetWPM()));
+        ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - getNetWPM()));
     }
     //Ritar ut WPM i y-led samt position i x-led. Ökar x-led med 1
     else{
-        ctx.lineTo((xAxisCounter - 1), (ctx.canvas.height - netWPM));
+        ctx.lineTo((xAxisCounter - 1), (ctx.canvas.height - getNetWPM()));
         xAxisCounter++;
     }
     //Själva ritandet
     ctx.stroke();
 }
 
-// Funktion för att sätta timer för WPM-beräkning och kör de funktionerna var 80nde ms
+// Funktion för att sätta timer för WPM-beräkning och kör de funktionerna enligt satt ms
 function WPMTimer(){
     wpmTimer = setTimeout(() => {
-        getWPM();
+        setWPMtext();
+        drawCanvas();
         if(charCounter < (chars.length)){
             WPMTimer();
         }
-    }, 80);
+    }, 100);
 }
 
 // Avslutar timern
