@@ -110,6 +110,7 @@ function evaluateKey(key){
         }
         // När det inte finns fler tecken att utvärdera
         else{
+            chars[charCounter - 1].classList.remove("active-char"); // Tar bort highlighter
             endGame();
         }
     } 
@@ -190,8 +191,9 @@ function startGame(){
         resetLetters();
     }
     markActiveChar();
-    textInputSettings();
     gameBtn.classList.add("stop"); // Lägger till klassen stop till startknappen
+    toggleTextInputSettings();
+    toggleSettingsArea();
     setWPMtext("--", "--", "0", "100%"); // Skickar in default-värden till stats
     ctx.canvas.width = ctx.canvas.width; // Tar bort sträck från canvas
     ctx.moveTo(-1,100); // Flyttar canvas startpunkt till längst ned till vänster, -1 i x-led
@@ -200,10 +202,10 @@ function startGame(){
 
 // Uppgifter som utförs vid spelets slut
 function endGame(){
-    chars[charCounter - 1].classList.remove("active-char"); // Tar bort highlighter
     clearWPMInterval();
-    textInputSettings();
     gameBtn.classList.remove("stop"); // Tar bort klassen stop från startknappen
+    toggleSettingsArea();
+    toggleTextInputSettings();
     startTime = null; // Nollar starttiden
     xAxisCounter = 0; // Nollar grafens x-axelposition
 }
@@ -234,9 +236,9 @@ function resetLetters(){
 }
 
 // Tillåter/spärrar input till textinput beroende på om spelet är startat eller ej
-// Rensar även fältet
-function textInputSettings(){
-    if(gameBtn.classList.contains("stop")){
+// Rensar även inputen på text
+function toggleTextInputSettings(){
+    if(!gameBtn.classList.contains("stop")){
         textinput.disabled = true;
         textinput.blur();
     } else {
@@ -244,6 +246,25 @@ function textInputSettings(){
         textinput.focus();
     }
     textinput.value = ""; // Tar bort värde från textinput
+}
+
+// Tillåter/spärrar input till textinput beroende på om spelet startat eller ej
+function toggleSettingsArea(){
+        if(gameBtn.classList.contains("stop")){
+            selector.disabled = true;
+            for (let i = 0; i < radioBtns.length; i++) {
+                const element = radioBtns[i];
+                element.disabled = true;
+            }
+            chkCaseToggle.disabled = true;
+        } else {
+            selector.disabled = false;
+            for (let i = 0; i < radioBtns.length; i++) {
+                const element = radioBtns[i];
+                element.disabled = false;
+            }
+            chkCaseToggle.disabled = false;
+        }
 }
 
 // Rensar fält i selectorn
