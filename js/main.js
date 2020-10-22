@@ -278,7 +278,7 @@ function markCorrectChar(key){
     charCounter++;
 }
 
-//Backar aktiva tecknet, minskar counters och tar bort klasser från backade span
+// Backar aktiva tecknet, minskar counters och tar bort klasser från backade span
 function correctError(){
     charCounter--;
     chars[charCounter + 1].classList.remove("active-char");
@@ -291,6 +291,7 @@ function correctError(){
     }
 }
 
+// Spelar upp ljudeffekt buzzAudio
 function playErrorSound(){
     buzzAudio.play();
 }
