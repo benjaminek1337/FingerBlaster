@@ -96,12 +96,17 @@ footer a{
     margin-right:20px;
 }
 
-.options-area{
+#settings {
     background-color: rgba(250, 250, 250, 0.733);;
     margin-bottom: 10px;
     padding-bottom: 10px;
     border-radius: 10px;
     display: flex;
+}
+
+#settings.on-disable{
+    opacity: 75%;
+
 }
 
 #text-selector{

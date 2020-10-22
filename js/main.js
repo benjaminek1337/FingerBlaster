@@ -250,6 +250,7 @@ function toggleTextInputSettings(){
 
 // Tillåter/spärrar input till textinput beroende på om spelet startat eller ej
 function toggleSettingsArea(){
+    const settingsDiv = document.getElementById("settings");
         if(gameBtn.classList.contains("stop")){
             selector.disabled = true;
             for (let i = 0; i < radioBtns.length; i++) {
@@ -257,6 +258,7 @@ function toggleSettingsArea(){
                 element.disabled = true;
             }
             chkCaseToggle.disabled = true;
+            settingsDiv.classList.add("on-disable");
         } else {
             selector.disabled = false;
             for (let i = 0; i < radioBtns.length; i++) {
@@ -264,6 +266,7 @@ function toggleSettingsArea(){
                 element.disabled = false;
             }
             chkCaseToggle.disabled = false;
+            settingsDiv.classList.remove("on-disable");
         }
 }
 
