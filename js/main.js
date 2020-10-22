@@ -21,8 +21,8 @@ const ctx = canvas.getContext("2d");
 
 let texts; // Array med texter från JSON-fil
 let chars; // Array över samtliga tecken i vald text
-let charCounter; // Värdet på aktiv bokstav
-let errorsCounter; // Antalet felslag som registrerats hittills
+let charCounter = 0; // Värdet på aktiv bokstav
+let errorsCounter = 0; // Antalet felslag som registrerats hittills
 let startTime; // Timestamp vid första slag på tangentbord
 let wpmTimer; // Timer som kör ord/minuten funktioner
 let xAxisCounter = 0; // variabel till grafens x-axelvärde
@@ -110,7 +110,6 @@ function evaluateKey(key){
         }
         // När det inte finns fler tecken att utvärdera
         else{
-            chars[charCounter - 1].classList.remove("active-char"); // Tar bort highlighter
             endGame();
         }
     } 
@@ -186,8 +185,10 @@ function setInfoText(){
 
 // Uppgifter som utförs vid spelstart
 function startGame(){
-    resetCounters();
-    resetLetters();
+    if(charCounter != 0){
+        resetCounters();
+        resetLetters();
+    }
     markActiveChar();
     textInputSettings();
     gameBtn.classList.add("stop"); // Lägger till klassen stop till startknappen
@@ -199,6 +200,7 @@ function startGame(){
 
 // Uppgifter som utförs vid spelets slut
 function endGame(){
+    chars[charCounter - 1].classList.remove("active-char"); // Tar bort highlighter
     clearWPMInterval();
     textInputSettings();
     gameBtn.classList.remove("stop"); // Tar bort klassen stop från startknappen
@@ -217,9 +219,7 @@ function stopGame(){
 
 // Rensar charCounter och errorsCounter
 function resetCounters(){
-    if(charCounter != 0)
         charCounter = 0;
-    if(errorsCounter != 0)
         errorsCounter = 0;
 }
 
@@ -308,21 +308,17 @@ function playErrorSound(){
 
 // Returnerar tidsstämpel från tiden spelet startade tills nu
 function getElapsedTime(){
-    let currentTime = Date.now();
-    let elapsedTime = (currentTime - startTime) / 60000;
-    return elapsedTime;
+    return (Date.now() - startTime) / 60000;
 }
 
 // Räknar ut och returnerar bruttoWPM
 function getGrossWPM(){
-    let grossWPM = Math.round((charCounter / 5) / getElapsedTime());
-    return grossWPM;
+    return Math.round((charCounter / 5) / getElapsedTime());
 }
 
 // Räknar ut och returnerar nettoWPM
 function getNetWPM(){
-    let netWPM = Math.round(getGrossWPM() - (( errorsCounter / 5) / getElapsedTime()));
-    return netWPM;
+    return Math.round(getGrossWPM() - (( errorsCounter / 5) / getElapsedTime()));
 }
 
 //Räknar ut procent felslag
