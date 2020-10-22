@@ -8,8 +8,6 @@ const chkCaseToggle = document.getElementById("case-toggle");
 const textarea = document.getElementById("game-textarea");
 const textinput = document.getElementById("textinput");
 const gameBtn = document.getElementById("game-btn");
-const selectedTextTitle = document.getElementById("selected-text-title");
-const selectedTextInfo = document.getElementById("selected-text-info");
 const muteBtn = document.getElementById("mute");
 const buzzAudio = document.getElementById("buzzAudio");
 const stats = Array.from(document.getElementsByClassName("stat-value"));
@@ -175,8 +173,10 @@ function fillTextArray(){
     chars = Array.from(textarea.querySelectorAll("span"));
 }
 
-// Sätter information om vald text till gränssnittet
+// Hämtar DOM-element relaterade till info om text och sätter värden till dem
 function setInfoText(){
+    const selectedTextTitle = document.getElementById("selected-text-title");
+    const selectedTextInfo = document.getElementById("selected-text-info");
     const text = texts.find(t => t.title == selector.value);
     const wordCount = text.text.split(" ").length;
     selectedTextTitle.innerHTML = text.title;
