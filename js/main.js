@@ -8,16 +8,14 @@ const chkCaseToggle = document.getElementById("case-toggle");
 const textarea = document.getElementById("game-textarea");
 const textinput = document.getElementById("textinput");
 const gameBtn = document.getElementById("game-btn");
-const wpmText = document.getElementById("wpm-value");
-const netWPMText = document.getElementById("net-wpm-value");
-const errorsText = document.getElementById("errors-value");
-const errorsPercentageText = document.getElementById("errors-percentage-value");
 const selectedTextTitle = document.getElementById("selected-text-title");
 const selectedTextInfo = document.getElementById("selected-text-info");
 const muteBtn = document.getElementById("mute");
 const buzzAudio = document.getElementById("buzzAudio");
+const stats = Array.from(document.getElementsByClassName("stat-value"));
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
 
 //#endregion
 
@@ -114,9 +112,7 @@ function EvaluateKey(key){
         }
         // När det inte finns fler tecken att utvärdera
         else{
-            chars[charCounter - 1].classList.remove("active-char");
-            gameBtn.classList.remove("stop");
-            setWPMtext()
+            chars[charCounter - 1].classList.remove("active-char"); // Tar bort highlighter
             endGame();
         }
     } 
@@ -196,11 +192,7 @@ function startGame(){
     startTime = null; // Nollar starttiden
     textinput.disabled = false; // Gör textinput tillgänglig för inmatning
     textinput.focus(); // Ger fokus till textinput
-    //Sätter värden till DOM-element gällande statistik
-    wpmText.innerHTML ="--";
-    netWPMText.innerHTML ="--";
-    errorsText.innerHTML = "0";
-    errorsPercentageText.innerHTML = "100%";
+    setWPMtext("--", "--", "0", "100%"); // Skickar in default-värden till stats
     gameBtn.classList.add("stop"); // Lägger till klassen stop till startknappen
     ctx.canvas.width = ctx.canvas.width; // Tar bort sträck från canvas
     ctx.moveTo(-1,100); // Flyttar canvas startpunkt till längst ned till vänster, -1 i x-led
@@ -208,26 +200,22 @@ function startGame(){
 
 // Uppgifter som utförs vid spelets slut
 function endGame(){
+    clearWPMTimer();
     textinput.blur(); // Tar bort fokus från textinput
     textinput.disabled = true; // Gör textinput otillgänglig
     textinput.value = ""; // Tar bort värde från textinput
+    gameBtn.classList.remove("stop"); // Tar bort klassen stop från startknappen
     startTime = null; // Nollar starttiden
-    xAxisCounter = 0; // Nollar x-axelns position
-    clearWPMTimer();
+    xAxisCounter = 0; // Nollar grafens x-axelposition
 }
 
 // Uppgifter som utförs då spelet avbryts
 function stopGame(){
-    // Tar bort värden från statistikelement
-    wpmText.innerHTML ="";
-    netWPMText.innerHTML ="";
-    errorsText.innerHTML = "";
-    errorsPercentageText.innerHTML = "";
     endGame();
-    resetCounters()
+    setWPMtext("", "", "", "") // Rensar värden från stats
+    resetCounters();
     resetLetters();
-    gameBtn.classList.remove("stop"); // Tar bort klassen stop från startknappen
-    ctx.canvas.width = ctx.canvas.width; // Tar bort sträck canvas
+    ctx.canvas.width = ctx.canvas.width; // Tar bort grafen från canvas
 }
 
 // Rensar charCounter och errorsCounter
@@ -333,11 +321,11 @@ function getErrorsPercentage(){
 }
 
 //Tar emot total WPM, och sätter DOM-elementen (text) till aktuella värden
-function setWPMtext(){
-    wpmText.innerHTML = getGrossWPM();
-    netWPMText.innerHTML = getNetWPM();
-    errorsText.innerHTML = errorsCounter;
-    errorsPercentageText.innerHTML = getErrorsPercentage() + "%";
+function setWPMtext(grossWPM, netWPM, errorsCount, percentage){
+    stats[0].innerHTML = grossWPM;
+    stats[1].innerHTML = netWPM;
+    stats[2].innerHTML = errorsCount;
+    stats[3].innerHTML = percentage;
 }
 
 //Sätter höjd och bredd till canvas
@@ -371,7 +359,7 @@ function drawCanvas(){
 // Funktion för att sätta timer för WPM-beräkning och kör de funktionerna enligt satt ms
 function WPMTimer(){
     wpmTimer = setTimeout(() => {
-        setWPMtext();
+        setWPMtext(getGrossWPM(), getNetWPM(), errorsCounter, getErrorsPercentage()  + "%");
         drawCanvas();
         if(charCounter < (chars.length)){
             WPMTimer();
