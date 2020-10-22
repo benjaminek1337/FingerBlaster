@@ -72,7 +72,7 @@ chkCaseToggle.addEventListener("click", () => {
 // Vid slag på tangentbord, kopplat till input
 textinput.addEventListener("keydown", (event) => {
     let key = event.key;
-    EvaluateKey(key);
+    evaluateKey(key);
 });
 
 //#endregion
@@ -93,14 +93,14 @@ function onInit(){
 }
 
 // Tar emot inkommen sträng från tangentbordet och utför uppgifter beroende på slag
-function EvaluateKey(key){
+function evaluateKey(key){
     //Vid första slag på tangentbord
     if(startTime == null){
         startTime = Date.now();
         setWPMInterval(); //Startar WPM-timer
     }
-    // Om slaget är någon av tecknen
-    if(/^[a-öA-Ö,.:;'!\- ]$/.test(key)){
+    // Om slaget är ett tecken (inte "Backspace", "Shift" etc)
+    if(key.length == 1){
         // Om slaget är mellanslag
         if(key == " "){
             textinput.value=""; //Töm input
@@ -116,7 +116,7 @@ function EvaluateKey(key){
             endGame();
         }
     } 
-    // Vid radera-knappen, backa och ta bort värden
+    // Vid backspace, backa och ta bort värden
     else if(key == "Backspace" && charCounter > 0){
        correctError();
     }
@@ -189,12 +189,12 @@ function startGame(){
     resetCounters();
     resetLetters();
     markActiveChar();
-    startTime = null; // Nollar starttiden
     textInputSettings();
-    setWPMtext("--", "--", "0", "100%"); // Skickar in default-värden till stats
     gameBtn.classList.add("stop"); // Lägger till klassen stop till startknappen
+    setWPMtext("--", "--", "0", "100%"); // Skickar in default-värden till stats
     ctx.canvas.width = ctx.canvas.width; // Tar bort sträck från canvas
     ctx.moveTo(-1,100); // Flyttar canvas startpunkt till längst ned till vänster, -1 i x-led
+    startTime = null; // Nollar starttiden
 }
 
 // Uppgifter som utförs vid spelets slut
