@@ -327,7 +327,12 @@ function getNetWPM(){
 
 //Räknar ut procent felslag
 function getErrorsPercentage(){
-    let percent = Math.round(100 - ((errorsCounter * 100) / charCounter));
+    let percent;
+    if(errorsCounter == 0){
+        percent = 100;
+    } else {
+        percent = Math.round(100 - ((errorsCounter * 100) / charCounter));
+    }
     return percent;
 }
 
