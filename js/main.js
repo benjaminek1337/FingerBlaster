@@ -187,27 +187,28 @@ function setInfoText(){
 // Uppgifter som utförs vid spelstart
 function startGame(){
     if(charCounter != 0){
+        // Om charCounter inte är 0 finns det risk för skräpvärden
         resetCounters();
         resetLetters();
+        startTime = null;
     }
     markActiveChar();
     gameBtn.classList.add("stop"); // Lägger till klassen stop till startknappen
-    toggleTextInputSettings();
-    toggleSettingsArea();
+    toggleEnabledDisabledAreas(false); // Skickar in false till funktionen för att spärra/öppna element
+    textinput.focus();
     setWPMtext("--", "--", "0", "100%"); // Skickar in default-värden till stats
     ctx.canvas.width = ctx.canvas.width; // Tar bort sträck från canvas
     ctx.moveTo(-1,100); // Flyttar canvas startpunkt till längst ned till vänster, -1 i x-led
-    startTime = null; // Nollar starttiden
 }
 
 // Uppgifter som utförs vid spelets slut
 function endGame(){
     clearWPMInterval();
     gameBtn.classList.remove("stop"); // Tar bort klassen stop från startknappen
-    toggleSettingsArea();
-    toggleTextInputSettings();
     startTime = null; // Nollar starttiden
     xAxisCounter = 0; // Nollar grafens x-axelposition
+    toggleEnabledDisabledAreas(true); // Skickar in true till funktionen för att spärra/öppna element
+    textinput.blur();
 }
 
 // Uppgifter som utförs då spelet avbryts
@@ -235,39 +236,22 @@ function resetLetters(){
     }
 }
 
-// Tillåter/spärrar input till textinput beroende på om spelet är startat eller ej
-// Rensar även inputen på text
-function toggleTextInputSettings(){
-    if(!gameBtn.classList.contains("stop")){
-        textinput.disabled = true;
-        textinput.blur();
-    } else {
-        textinput.disabled = false;
-        textinput.focus();
-    }
-    textinput.value = ""; // Tar bort värde från textinput
-}
-
-// Tillåter/spärrar input till textinput beroende på om spelet startat eller ej
-function toggleSettingsArea(){
+// Tillåter/spärrar interaktion med DOM-element beroende på inskickad bools värde
+function toggleEnabledDisabledAreas(toggler){
     const settingsDiv = document.getElementById("settings");
-        if(gameBtn.classList.contains("stop")){
-            selector.disabled = true;
-            for (let i = 0; i < radioBtns.length; i++) {
-                const element = radioBtns[i];
-                element.disabled = true;
-            }
-            chkCaseToggle.disabled = true;
-            settingsDiv.classList.add("on-disable");
-        } else {
-            selector.disabled = false;
-            for (let i = 0; i < radioBtns.length; i++) {
-                const element = radioBtns[i];
-                element.disabled = false;
-            }
-            chkCaseToggle.disabled = false;
-            settingsDiv.classList.remove("on-disable");
-        }
+    textinput.disabled = toggler;
+    textinput.value = "";
+
+    selector.disabled = !toggler;
+    chkCaseToggle.disabled = !toggler;
+    for (let i = 0; i < radioBtns.length; i++) {
+        radioBtns[i].disabled = !toggler;
+    }
+    if(!toggler)
+        settingsDiv.classList.add("on-disable");
+    else
+    settingsDiv.classList.remove("on-disable");
+
 }
 
 // Rensar fält i selectorn
