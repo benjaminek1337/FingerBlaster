@@ -1,7 +1,6 @@
 
-//#region DOM-element
+//#region DOM-elements
 
-//DOM-element
 const selector = document.getElementById("text-selector");
 const radioBtns = Array.from(document.querySelectorAll(".radio-lng"));
 const chkCaseToggle = document.getElementById("case-toggle");
@@ -17,20 +16,20 @@ const ctx = canvas.getContext("2d");
 
 //#endregion
 
-//#region Variabler
+//#region Variables
 
-let texts; // Array med texter från JSON-fil
-let chars; // Array över samtliga tecken i vald text
-let charCounter = 0; // Värdet på aktiv bokstav
-let errorsCounter = 0; // Antalet felslag som registrerats hittills
-let startTime; // Timestamp vid första slag på tangentbord
-let wpmTimer; // Timer som kör ord/minuten funktioner
-let xAxisCounter = 0; // variabel till grafens x-axelvärde
+let texts; // Array containing texts imported from the JSON file
+let chars; // Array of all the individual chars from the text area
+let charCounter = 0; // Value of currently active char
+let errorsCounter = 0; // Ammount of wrong keystrokes
+let startTime; // When the player started typing the first letter
+let wpmTimer; // Interval which runs stats calculations/draw graph as game is going
+let xAxisCounter = 0; // Value of the graphs x-axis
 
 //#endregion
 
 //#region Event listeners
-// Startar eller stoppar spel beroende på om knappen har klassen stop
+// Starts/stops game depending on gameBtn class
 gameBtn.addEventListener("click", () => {
     if(!gameBtn.classList.contains("stop")){
         startGame();
@@ -39,20 +38,18 @@ gameBtn.addEventListener("click", () => {
     }
 });
 
-// Vid byte av text i selectorn
+// When changing texts from selector
 selector.addEventListener("change", () => {
-    stopGame();
     clearTextArea();
     fillTextArea();
     fillTextArray();
     setInfoText();
 });
 
-// Loop över radiobuttons och tilldelar funktioner
+// On radio btn change
 for (let i = 0; i < radioBtns.length; i++) {
     const rb = radioBtns[i];
     rb.addEventListener("click", () => {
-        stopGame();
         clearTextSelector();
         fillTextSelector();
         clearTextArea();
@@ -62,12 +59,7 @@ for (let i = 0; i < radioBtns.length; i++) {
     });
 }
 
-// Vid checkboxklick
-chkCaseToggle.addEventListener("click", () => {
-    stopGame();
-});
-
-// Vid slag på tangentbord, kopplat till input
+// Keyboard input to text input box
 textinput.addEventListener("keydown", (event) => {
     let key = event.key;
     evaluateKey(key);
@@ -75,11 +67,10 @@ textinput.addEventListener("keydown", (event) => {
 
 //#endregion
 
-// Funktion som körs vid fönsterladdning
+// Functions to run when document is loaded
 function onInit(){
-    // Ger arrayen texts värden från JSON-fil
     loadJSON( (response) => {
-        texts = JSON.parse(response);
+        texts = JSON.parse(response); // Fills the texts array from parsed JSON
     });
 
     fillTextSelector();
@@ -90,37 +81,7 @@ function onInit(){
     textinput.disabled = true;
 }
 
-// Tar emot inkommen sträng från tangentbordet och utför uppgifter beroende på slag
-function evaluateKey(key){
-    //Vid första slag på tangentbord
-    if(startTime == null){
-        startTime = Date.now();
-        setWPMInterval(); //Startar WPM-timer
-    }
-    // Om slaget är ett tecken (inte "Backspace", "Shift" etc)
-    if(key.length == 1){
-        // Om slaget är mellanslag
-        if(key == " "){
-            textinput.value=""; //Töm input
-        }
-        markCorrectChar(key);
-        // Så länge det finns fler tecken kvar att utvärdera
-        if(chars.length > charCounter){
-            markActiveChar();
-        }
-        // När det inte finns fler tecken att utvärdera
-        else{
-            chars[charCounter - 1].classList.remove("active-char"); // Tar bort highlighter
-            endGame();
-        }
-    } 
-    // Vid backspace, backa och ta bort värden
-    else if(key == "Backspace" && charCounter > 0){
-       correctError();
-    }
-}
-
-// Hämtar JSON-fil med texter
+// Fetches JSON file and sends it.
 function loadJSON(callback){
     const obj = new XMLHttpRequest();
     obj.overrideMimeType("application/json");
@@ -133,7 +94,7 @@ function loadJSON(callback){
     obj.send();  
 }
 
-// Fyller selectorn med titlar från texts arrayen, beroende på valt språk
+// Fills the text selector with titles, and filters them depending on selected lng
 function fillTextSelector(){
     let option, filteredTexts;
     switch (true) {
@@ -153,7 +114,7 @@ function fillTextSelector(){
     }
 }
 
-// Fyller text-arean med data från vald text från textarrayen
+// Fills the textarea with the text prop from the texts array
 function fillTextArea(){
     let span, node, text;
     text = texts.find(t => t.title == selector.value)
@@ -168,12 +129,12 @@ function fillTextArea(){
     }
 }
 
-// Fyller chars-arrayen med bokstäver från text-areans span-element
+// Gets the span elements from the textarea and shove 'em into an array
 function fillTextArray(){
     chars = Array.from(textarea.querySelectorAll("span"));
 }
 
-// Hämtar DOM-element relaterade till info om text och sätter värden till dem
+// Gets the DOM-elements regarding author, and text stats. Calculates and sets info to them
 function setInfoText(){
     const selectedTextTitle = document.getElementById("selected-text-title");
     const selectedTextInfo = document.getElementById("selected-text-info");
@@ -184,49 +145,79 @@ function setInfoText(){
     chars.length + " tecken)"
 }
 
-// Uppgifter som utförs vid spelstart
+// Function to run on game start
 function startGame(){
     if(charCounter != 0){
-        // Om charCounter inte är 0 finns det risk för skräpvärden
+        // If charCounter != 0, risk for garbage values somewhere
         resetCounters();
         resetLetters();
         startTime = null;
     }
     markActiveChar();
-    gameBtn.classList.add("stop"); // Lägger till klassen stop till startknappen
-    toggleEnabledDisabledAreas(false); // Skickar in false till funktionen för att spärra/öppna element
+    gameBtn.classList.add("stop"); // Adds "stop" class to gameBtn
+    toggleEnabledDisabledAreas(false); // Disables/enables DOM-elements
     textinput.focus();
-    setWPMtext("--", "--", "0", "100%"); // Skickar in default-värden till stats
-    ctx.canvas.width = ctx.canvas.width; // Tar bort sträck från canvas
-    ctx.moveTo(-1,100); // Flyttar canvas startpunkt till längst ned till vänster, -1 i x-led
+    setWPMtext("--", "--", "0", "100%"); // Sends default values to the stats area
+    ctx.canvas.width = ctx.canvas.width; // Removes the graph line from canvas
+    ctx.moveTo(-1,100); // Moves the canvas starting point 
 }
 
-// Uppgifter som utförs vid spelets slut
+// Function to run on game end
 function endGame(){
     clearWPMInterval();
-    gameBtn.classList.remove("stop"); // Tar bort klassen stop från startknappen
-    startTime = null; // Nollar starttiden
-    xAxisCounter = 0; // Nollar grafens x-axelposition
-    toggleEnabledDisabledAreas(true); // Skickar in true till funktionen för att spärra/öppna element
+    gameBtn.classList.remove("stop");
+    startTime = null;
+    xAxisCounter = 0;
+    toggleEnabledDisabledAreas(true); // Disables/enables DOM-elements
     textinput.blur();
 }
 
-// Uppgifter som utförs då spelet avbryts
+// Function to run on game abort
 function stopGame(){
     endGame();
-    setWPMtext("", "", "", "") // Rensar värden från stats
+    setWPMtext("", "", "", "") // Clears stats area
     resetCounters();
     resetLetters();
-    ctx.canvas.width = ctx.canvas.width; // Tar bort grafen från canvas
+    ctx.canvas.width = ctx.canvas.width; // Removes the graph line from canvas
 }
 
-// Rensar charCounter och errorsCounter
+// Recieves key stroke, evaluates it, perform actions depending on key value
+function evaluateKey(key){
+    //This runs when function revieves its first keystroke per game
+    if(startTime == null){
+        startTime = Date.now();
+        setWPMInterval(); // Starts the interval timer for stats calc
+    }
+    // If the stroke string contains one char (Not "Backspace", "Shift", etc)
+    if(key.length == 1){
+        // If blank space
+        if(key == " "){
+            textinput.value=""; // Clear textinput of chars
+        }
+        markCorrectChar(key);
+        // As long as there's chars to evaluate
+        if(chars.length > charCounter){
+            markActiveChar();
+        }
+        // When out of chars to evaluate
+        else{
+            chars[charCounter - 1].classList.remove("active-char"); // Removes highlighter from char
+            endGame();
+        }
+    } 
+    // On backspace
+    else if(key == "Backspace" && charCounter > 0){
+       correctError();
+    }
+}
+
+// Clears charCounter and errorCounter
 function resetCounters(){
-        charCounter = 0;
-        errorsCounter = 0;
+    charCounter = 0;
+    errorsCounter = 0;
 }
 
-// Rensar klasser från span-elementen i arrayen chars
+// Clears the textareas span elements of all classes
 function resetLetters(){
     if(chars.length > 0){
         for (let i = 0; i < chars.length; i++) {
@@ -236,7 +227,7 @@ function resetLetters(){
     }
 }
 
-// Tillåter/spärrar interaktion med DOM-element beroende på inskickad bools värde
+// Enables/disables DOM-elements depending on recieved boolean value
 function toggleEnabledDisabledAreas(toggler){
     const settingsDiv = document.getElementById("settings");
     textinput.disabled = toggler;
@@ -254,20 +245,19 @@ function toggleEnabledDisabledAreas(toggler){
 
 }
 
-// Rensar fält i selectorn
+// Clears the text selector
 function clearTextSelector(){
     for (let i = selector.options.length - 1; i >= 0; i--){
         selector.options[i] = null;
     }
 }
 
-// Rensar textarean
+// Clears the text area
 function clearTextArea(){
     textarea.innerHTML="";
 }
 
-// Highlightar aktuell char med active-char klass, tar bort den klassen från tidigare
-// element
+// Highlights the current active char, removes highlight from previous char
 function markActiveChar(){
     if(chars[charCounter].id != 0){
         const previousChar = chars.find(c => c.id == chars[charCounter].id - 1);
@@ -276,9 +266,8 @@ function markActiveChar(){
     chars[charCounter].classList.add("active-char");
 }
 
-// Tar emot tecken, utvärderar mot aktuell char (beroende på case-sensitivity)
-// Ökar errorsCounter vid felslag, ökar charCounter, spelar ljud vid fel om ej mutad
-// Sätter CSS-klass till char
+// Evaluates recieved char to currently active char. Marks char as correct or incorrect with classes
+// Runs function to play error sound if enabled and increments error counter on mistake
 function markCorrectChar(key){
     if(chkCaseToggle.checked && chars[charCounter].innerHTML.toLowerCase() == key.toLowerCase()){
         chars[charCounter].classList.add("correct-char");
@@ -296,7 +285,7 @@ function markCorrectChar(key){
     charCounter++;
 }
 
-// Backar aktiva tecknet, minskar counters och tar bort klasser från backade span
+// Jumps the active character backwards, clears all classes from previously typed char
 function correctError(){
     charCounter--;
     chars[charCounter + 1].classList.remove("active-char");
@@ -309,27 +298,27 @@ function correctError(){
     }
 }
 
-// Spelar upp ljudeffekt buzzAudio
+// Plays sound effect buzzAudio
 function playErrorSound(){
     buzzAudio.play();
 }
 
-// Returnerar tidsstämpel från tiden spelet startade tills nu
+// Returns timestamp from gamestart to time of functionrun
 function getElapsedTime(){
     return (Date.now() - startTime) / 60000;
 }
 
-// Räknar ut och returnerar bruttoWPM
+// Calculates and returns gross WPM
 function getGrossWPM(){
     return Math.round((charCounter / 5) / getElapsedTime());
 }
 
-// Räknar ut och returnerar nettoWPM
+// Calculates and returns net WPM
 function getNetWPM(){
     return Math.round(getGrossWPM() - (( errorsCounter / 5) / getElapsedTime()));
 }
 
-//Räknar ut procent felslag
+// Calculates percentage of type accuracy
 function getErrorsPercentage(){
     let percent;
     if(errorsCounter == 0){
@@ -340,7 +329,7 @@ function getErrorsPercentage(){
     return percent;
 }
 
-//Tar emot total WPM, och sätter DOM-elementen (text) till aktuella värden
+// Recieves values, sets values to DOM-elements representing typing stats
 function setWPMtext(grossWPM, netWPM, errorsCount, percentage){
     stats[0].innerHTML = grossWPM;
     stats[1].innerHTML = netWPM;
@@ -348,16 +337,17 @@ function setWPMtext(grossWPM, netWPM, errorsCount, percentage){
     stats[3].innerHTML = percentage;
 }
 
-//Sätter höjd och bredd till canvas
+// Sets height/width of canvas
 function initCanvas(){
     ctx.canvas.width = 200;
     ctx.canvas.height = 100;
 }
 
-//Funktion för att rita ut graf över WPM i canvas
+// Function to draw WPM graph on the canvas
 function drawCanvas(){
-    ctx.strokeStyle = "#ff5cf1"; //Färgen på linjen som ritas
-    //Sparar en bild av canvasen just nu, flyttar den -1 i x-led och ritar en punkt till
+    ctx.strokeStyle = "#ff5cf1"; // The color of the line
+    // Saves an image of the current graph, clears graph, puts image -1 x value to simulate
+    // a continually scrolling graph when the graph line is nearing max width of graph
     if(xAxisCounter > (ctx.canvas.width - 10)){
         const imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
         ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
@@ -367,16 +357,16 @@ function drawCanvas(){
         ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - getNetWPM()));
         ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - getNetWPM()));
     }
-    //Ritar ut WPM i y-led samt position i x-led. Ökar x-led med 1
+    // Draws graph according to net WPM and the x axis counter
     else{
         ctx.lineTo((xAxisCounter - 1), (ctx.canvas.height - getNetWPM()));
         xAxisCounter++;
     }
-    //Själva ritandet
+    // Does the drawing
     ctx.stroke();
 }
 
-// Funktion för att sätta timer för WPM-beräkning och kör de funktionerna enligt satt ms
+// Function to set wpmTimer to run stat functions on a predefined interval, here 100 ms
 function setWPMInterval(){
     wpmTimer = setInterval(() => {
         setWPMtext(getGrossWPM(), getNetWPM(), errorsCounter, getErrorsPercentage()  + "%");
@@ -384,10 +374,10 @@ function setWPMInterval(){
     }, 100);
 }
 
-// Avslutar timern
+// Clears the wpmTimer
 function clearWPMInterval(){
     clearInterval(wpmTimer);
 }
 
-// Event-lister för när fönstret laddats
+// Event listener to on window load
 window.addEventListener("load", onInit(), false);
