@@ -69,29 +69,26 @@ textinput.addEventListener("keydown", (event) => {
 
 // Functions to run when document is loaded
 function onInit(){
-    loadJSON( (response) => {
-        texts = JSON.parse(response); // Fills the texts array from parsed JSON
-    });
-
-    fillTextSelector();
-    fillTextArea();
-    fillTextArray();
-    setInfoText();
+    setTextsAsync();
     initCanvas();
     textinput.disabled = true;
 }
 
-// Fetches JSON file and sends it.
-function loadJSON(callback){
-    const obj = new XMLHttpRequest();
-    obj.overrideMimeType("application/json");
-    obj.open('GET', 'texts.json', false);
-    obj.onreadystatechange = () => {
-        if (obj.readyState === 4 && obj.status === 200) {
-            callback(obj.responseText);
-        }
-    };
-    obj.send();  
+// Fetches and returns JSON obj from local file texts.json
+async function fetchTextsAsync(){
+    const response = await fetch('./texts.json');
+    const texts = await response.json();
+    return texts;
+}
+
+// Awaits fetch req, fills texts with response
+// Runs related functions after texts is set
+async function setTextsAsync(){
+    texts = await fetchTextsAsync();
+    fillTextSelector();
+    fillTextArea();
+    fillTextArray();
+    setInfoText();
 }
 
 // Fills the text selector with titles, and filters them depending on selected lng
