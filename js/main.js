@@ -87,7 +87,7 @@ function loadJSON(callback){
     obj.overrideMimeType("application/json");
     obj.open('GET', 'texts.json', false);
     obj.onreadystatechange = () => {
-        if (obj.readyState == 4 && obj.status == "200") {
+        if (obj.readyState === 4 && obj.status === 200) {
             callback(obj.responseText);
         }
     };
@@ -147,7 +147,7 @@ function setInfoText(){
 
 // Function to run on game start
 function startGame(){
-    if(charCounter != 0){
+    if(charCounter !== 0){
         // If charCounter != 0, risk for garbage values somewhere
         resetCounters();
         resetLetters();
@@ -189,7 +189,7 @@ function evaluateKey(key){
         setWPMInterval(); // Starts the interval timer for stats calc
     }
     // If the stroke string contains one char (Not "Backspace", "Shift", etc)
-    if(key.length == 1){
+    if(key.length === 1){
         // If blank space
         if(key == " "){
             textinput.value=""; // Clear textinput of chars
@@ -206,7 +206,7 @@ function evaluateKey(key){
         }
     } 
     // On backspace
-    else if(key == "Backspace" && charCounter > 0){
+    else if(key === "Backspace" && charCounter > 0){
        correctError();
     }
 }
@@ -259,7 +259,7 @@ function clearTextArea(){
 
 // Highlights the current active char, removes highlight from previous char
 function markActiveChar(){
-    if(chars[charCounter].id != 0){
+    if(chars[charCounter].id !== "0"){
         const previousChar = chars.find(c => c.id == chars[charCounter].id - 1);
         previousChar.classList.remove("active-char");
     }
@@ -269,10 +269,10 @@ function markActiveChar(){
 // Evaluates recieved char to currently active char. Marks char as correct or incorrect with classes
 // Runs function to play error sound if enabled and increments error counter on mistake
 function markCorrectChar(key){
-    if(chkCaseToggle.checked && chars[charCounter].innerHTML.toLowerCase() == key.toLowerCase()){
+    if(chkCaseToggle.checked && chars[charCounter].innerHTML.toLowerCase() === key.toLowerCase()){
         chars[charCounter].classList.add("correct-char");
     }
-    else if(chars[charCounter].innerHTML == key){
+    else if(chars[charCounter].innerHTML === key){
         chars[charCounter].classList.add("correct-char");
     }
     else {
@@ -321,7 +321,7 @@ function getNetWPM(){
 // Calculates percentage of type accuracy
 function getErrorsPercentage(){
     let percent;
-    if(errorsCounter == 0){
+    if(errorsCounter === 0){
         percent = 100;
     } else {
         percent = Math.round(100 - ((errorsCounter * 100) / charCounter));
@@ -352,13 +352,14 @@ function drawCanvas(){
         const imageData = ctx.getImageData(1, 0, ctx.canvas.width-1, ctx.canvas.height);
         ctx.clearRect( 0, 0, ctx.canvas.width, ctx.canvas.height );
         ctx.putImageData(imageData, 0, 0);
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.2;
         ctx.beginPath();
         ctx.moveTo((ctx.canvas.width - 12), (ctx.canvas.height - getNetWPM()));
         ctx.lineTo((ctx.canvas.width - 11), (ctx.canvas.height - getNetWPM()));
     }
     // Draws graph according to net WPM and the x axis counter
     else{
+        ctx.lineWidth = 1.1;
         ctx.lineTo((xAxisCounter - 1), (ctx.canvas.height - getNetWPM()));
         xAxisCounter++;
     }
