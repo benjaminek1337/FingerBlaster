@@ -31,7 +31,9 @@ let xAxisCounter = 0; // Value of the graphs x-axis
 //#region Event listeners
 // Starts/stops game depending on gameBtn class
 gameBtn.addEventListener("click", () => {
-    if(!gameBtn.classList.contains("stop")){
+    if(texts == undefined){
+        console.log("ERROR: texts not loaded");
+    } else if(!gameBtn.classList.contains("stop")){
         startGame();
     } else {
         stopGame();
@@ -50,12 +52,16 @@ selector.addEventListener("change", () => {
 for (let i = 0; i < radioBtns.length; i++) {
     const rb = radioBtns[i];
     rb.addEventListener("click", () => {
-        clearTextSelector();
-        fillTextSelector();
-        clearTextArea();
-        fillTextArea();
-        fillTextArray();
-        setInfoText();
+        if(texts != undefined){
+            clearTextSelector();
+            fillTextSelector();
+            clearTextArea();
+            fillTextArea();
+            fillTextArray();
+            setInfoText();
+        } else {
+            console.log("ERROR: texts not loaded");
+        }
     });
 }
 
